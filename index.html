@@ -1,0 +1,3637 @@
+<!DOCTYPE html>
+<html lang="uz" data-theme="light">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <meta name="theme-color" content="#667eea" />
+    <meta name="description" content="AI Academic Analytics Platform - Smart learning analytics with artificial intelligence" />
+    <title>AI Academic Analytics Platform</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkFJIEFjYWRlbWljIEFuYWx5dGljcyIsCiAgInNob3J0X25hbWUiOiAiQUkgQW5hbHl0aWNzIiwKICAiZGVzY3JpcHRpb24iOiAiU21hcnQgbGVhcm5pbmcgYW5hbHl0aWNzIHBsYXRmb3JtIiwKICAic3RhcnRfdXJsIjogIi8iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiM2NjdlZWEiLAogICJ0aGVtZV9jb2xvciI6ICIjNjY3ZWVhIiwKICAiaWNvbnMiOiBbCiAgICB7ICJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sLDxzdmcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB2aWV3Qm94PScwIDAgNTEyIDUxMic+PHJlY3Qgd2lkdGg9JzUxMicgaGVpZ2h0PSc1MTInIHJ4PSc2MCcgZmlsbD0nJTIzNjY3ZWVhJy8+PHRleHQgeD0nMjU2JyB5PSczNDAnIGZvbnQtc2l6ZT0nMjUwJyB0ZXh0LWFuY2hvcj0nbWlkZGxlJyBmaWxsPSd3aGl0ZScgZm9udC1mYW1pbHk9J3NhbnMtc2VyaWYnPkFJPC90ZXh0Pjwvc3ZnPg=="LCAic2l6ZXMiOiAiNTEyeDUxMiIsICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiLCAicHVycG9zZSI6ICJhbnkgbWFzayIgfQogIF0KfQ==" />
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s ease, color 0.2s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        :root {
+            --bg-primary: #f0f4ff;
+            --bg-secondary: #ffffff;
+            --bg-card: rgba(255, 255, 255, 0.92);
+            --bg-sidebar: #ffffff;
+            --text-primary: #0a0a1a;
+            --text-secondary: #3a3a5a;
+            --text-muted: #6a6a8a;
+            --border-color: rgba(226, 232, 240, 0.6);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 16px 48px rgba(0, 0, 0, 0.15);
+            --gradient-main: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-accent: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --radius: 24px;
+            --radius-sm: 14px;
+            --nav-bg: rgba(255, 255, 255, 0.88);
+            --blur-bg: blur(20px);
+            --glow: 0 0 60px rgba(102, 126, 234, 0.12);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0a0a18;
+            --bg-secondary: #141428;
+            --bg-card: rgba(26, 26, 46, 0.92);
+            --bg-sidebar: #1a1a2e;
+            --text-primary: #e8e8f0;
+            --text-secondary: #b8b8d0;
+            --text-muted: #787898;
+            --border-color: rgba(45, 45, 68, 0.6);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            --shadow-hover: 0 16px 48px rgba(0, 0, 0, 0.7);
+            --nav-bg: rgba(20, 20, 40, 0.9);
+            --glow: 0 0 60px rgba(102, 126, 234, 0.06);
+            --glass-border: rgba(255, 255, 255, 0.05);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* ===== LOADING ===== */
+        #loader {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: var(--bg-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        #loader.hide {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .loader-spinner {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 4px solid var(--border-color);
+            border-top-color: #667eea;
+            animation: spin 0.8s linear infinite;
+        }
+
+        .loader-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 2px;
+        }
+
+        .loader-lottie {
+            width: 120px;
+            height: 120px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--gradient-main);
+            border-radius: 10px;
+        }
+
+        /* ===== CONFETTI ===== */
+        .confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9998;
+            overflow: hidden;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            opacity: 0;
+            animation: confettiFall linear forwards;
+        }
+
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(-10px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: var(--nav-bg);
+            backdrop-filter: var(--blur-bg);
+            -webkit-backdrop-filter: var(--blur-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 24px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 24px rgba(0, 0, 0, 0.04);
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .navbar-brand i {
+            font-size: 1.5rem;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand-text {
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            list-style: none;
+        }
+
+        .nav-links li a {
+            padding: 8px 18px;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .nav-links li a:hover,
+        .nav-links li a.active {
+            background: var(--gradient-main);
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+        }
+
+        .nav-links li a .badge {
+            background: var(--danger);
+            color: #fff;
+            font-size: 0.6rem;
+            padding: 1px 8px;
+            border-radius: 50px;
+            position: absolute;
+            top: 2px;
+            right: 2px;
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .theme-toggle,
+        .lang-toggle,
+        .notification-toggle {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+
+        .theme-toggle:hover,
+        .lang-toggle:hover,
+        .notification-toggle:hover {
+            transform: scale(1.08);
+            box-shadow: var(--shadow-hover);
+            border-color: #667eea;
+        }
+
+        .notification-toggle .notif-dot {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 10px;
+            height: 10px;
+            background: var(--danger);
+            border-radius: 50%;
+            border: 2px solid var(--bg-card);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+
+        .lang-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .lang-dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 48px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            min-width: 150px;
+            box-shadow: var(--shadow-hover);
+            z-index: 100;
+            overflow: hidden;
+            backdrop-filter: var(--blur-bg);
+        }
+
+        .lang-dropdown-content.show {
+            display: block;
+            animation: fadeDown 0.25s ease;
+        }
+
+        .lang-dropdown-content button {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 12px 20px;
+            border: none;
+            background: transparent;
+            color: var(--text-primary);
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .lang-dropdown-content button:hover {
+            background: var(--gradient-main);
+            color: #fff;
+        }
+
+        /* ===== NOTIFICATION PANEL ===== */
+        .notification-panel {
+            position: fixed;
+            top: 72px;
+            right: -400px;
+            width: 380px;
+            max-height: 70vh;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 0 0 var(--radius) var(--radius);
+            box-shadow: var(--shadow-hover);
+            z-index: 999;
+            transition: right 0.3s ease;
+            overflow-y: auto;
+            backdrop-filter: var(--blur-bg);
+            padding: 16px 0;
+        }
+
+        .notification-panel.open {
+            right: 20px;
+        }
+
+        .notification-panel .notif-header {
+            padding: 0 20px 12px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-panel .notif-item {
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .notification-panel .notif-item:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .notification-panel .notif-item .notif-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .notification-panel .notif-item .notif-icon.success {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+        }
+        .notification-panel .notif-item .notif-icon.warning {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+        .notification-panel .notif-item .notif-icon.danger {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+        }
+        .notification-panel .notif-item .notif-icon.info {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--info);
+        }
+
+        .notification-panel .notif-item .notif-content {
+            flex: 1;
+        }
+
+        .notification-panel .notif-item .notif-content h4 {
+            font-size: 0.9rem;
+            margin-bottom: 2px;
+        }
+
+        .notification-panel .notif-item .notif-content p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .notification-panel .notif-item .notif-time {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+
+        /* ===== HAMBURGER ===== */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 6px;
+            background: transparent;
+            border: none;
+            z-index: 1001;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 28px;
+            height: 3px;
+            background: var(--text-primary);
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            transform-origin: center;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+            transform: scaleX(0);
+        }
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+
+        /* ===== MOBILE NAV ===== */
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 300px;
+            height: 100vh;
+            background: var(--bg-sidebar);
+            border-left: 1px solid var(--border-color);
+            padding: 80px 24px 40px;
+            z-index: 999;
+            transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: -10px 0 40px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .mobile-nav.open {
+            right: 0;
+        }
+
+        .mobile-nav a {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 18px;
+            border-radius: var(--radius-sm);
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .mobile-nav a:hover,
+        .mobile-nav a.active {
+            background: var(--gradient-main);
+            color: #fff;
+            transform: translateX(4px);
+        }
+
+        .mobile-nav a i {
+            width: 24px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .mobile-nav .mobile-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 12px 0;
+        }
+
+        .mobile-nav .mobile-lang {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .mobile-nav .mobile-lang button {
+            flex: 1;
+            min-width: 50px;
+            padding: 10px 8px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            background: transparent;
+            color: var(--text-secondary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+        }
+
+        .mobile-nav .mobile-lang button:hover,
+        .mobile-nav .mobile-lang button.active-lang {
+            background: var(--gradient-main);
+            color: #fff;
+            border-color: transparent;
+        }
+
+        .mobile-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 998;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.35s ease;
+        }
+
+        .mobile-overlay.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* ===== PAGE CONTAINER ===== */
+        .page-container {
+            padding-top: 88px;
+            max-width: 1440px;
+            margin: 0 auto;
+            padding-left: 24px;
+            padding-right: 24px;
+            padding-bottom: 40px;
+        }
+
+        /* ===== PAGES ===== */
+        .page {
+            display: none;
+            animation: fadeUp 0.6s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== HERO WITH BACKGROUND ===== */
+        .hero {
+            border-radius: var(--radius);
+            padding: 60px 48px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+            min-height: 320px;
+            display: flex;
+            align-items: center;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+        }
+
+        .hero-bg-slideshow {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .hero-bg-slideshow .slide {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1.2s ease;
+        }
+
+        .hero-bg-slideshow .slide.active {
+            opacity: 1;
+        }
+
+        .hero-bg-slideshow .slide-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(10, 10, 30, 0.7) 0%, rgba(102, 126, 234, 0.4) 100%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            color: #fff;
+            max-width: 700px;
+        }
+
+        .hero-content h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 16px;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-content h1 span {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-content p {
+            font-size: 1.15rem;
+            opacity: 0.95;
+            max-width: 560px;
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-top: 20px;
+            animation: pulseGlow 2s infinite alternate;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 40px;
+            margin-top: 24px;
+        }
+
+        .hero-stat .number {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .hero-stat .label {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        /* ===== VIDEO SECTION ===== */
+        .video-section {
+            margin: 40px 0;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+        }
+
+        .video-section video {
+            width: 100%;
+            display: block;
+            max-height: 500px;
+            object-fit: cover;
+        }
+
+        .video-caption {
+            padding: 16px 24px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* ===== SECTION TITLE ===== */
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 28px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .section-title i {
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* ===== GRID ===== */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+        }
+        .grid-3 {
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        }
+        .grid-4 {
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 28px 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: var(--blur-bg);
+            cursor: default;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-hover);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-main);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .card:hover::after {
+            opacity: 1;
+        }
+
+        .card-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            margin-bottom: 16px;
+            background: var(--gradient-main);
+            color: #fff;
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+        }
+
+        .card-icon.green {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+        .card-icon.yellow {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+        .card-icon.purple {
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+        }
+        .card-icon.pink {
+            background: linear-gradient(135deg, #ec4899, #db2777);
+        }
+        .card-icon.blue {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+        }
+        .card-icon.red {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        .card h3 {
+            font-size: 1.15rem;
+            margin-bottom: 8px;
+        }
+
+        .card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+
+        .card .tag {
+            display: inline-block;
+            padding: 4px 16px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            background: var(--gradient-main);
+            color: #fff;
+            letter-spacing: 0.3px;
+        }
+
+        .card .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 10px;
+            margin-top: 14px;
+            overflow: hidden;
+        }
+
+        .card .progress-bar .fill {
+            height: 100%;
+            border-radius: 10px;
+            background: var(--gradient-main);
+            transition: width 1.2s ease;
+        }
+
+        /* ===== CHART ===== */
+        .chart-area {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 32px 28px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+            backdrop-filter: var(--blur-bg);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            gap: 12px;
+        }
+
+        .chart-header h3 {
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chart-header h3 i {
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .chart-controls {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .chart-controls button {
+            padding: 8px 22px;
+            border: 2px solid var(--border-color);
+            border-radius: 50px;
+            background: transparent;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-controls button.active {
+            background: var(--gradient-main);
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.35);
+            transform: translateY(-2px);
+        }
+
+        .chart-controls button:hover:not(.active) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.2);
+            border-color: #667eea;
+        }
+
+        .chart-bars-wrapper {
+            position: relative;
+            padding-top: 10px;
+        }
+
+        .chart-bars {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            height: 260px;
+            gap: 18px;
+            padding: 0 8px;
+        }
+
+        .chart-bar {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            max-width: 70px;
+            min-width: 30px;
+        }
+
+        .chart-bar .bar-wrapper {
+            width: 100%;
+            height: 220px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            position: relative;
+        }
+
+        .chart-bar .bar {
+            width: 100%;
+            max-width: 50px;
+            min-height: 4px;
+            border-radius: 10px 10px 4px 4px;
+            background: var(--gradient-main);
+            transition: height 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.25);
+        }
+
+        .chart-bar .bar:hover {
+            transform: scaleX(1.08);
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .chart-bar .bar-tooltip {
+            position: absolute;
+            top: -32px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            padding: 2px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            white-space: nowrap;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .chart-bar .bar:hover .bar-tooltip {
+            opacity: 1;
+        }
+
+        .chart-bar .bar-value {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            min-height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chart-bar .bar-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-align: center;
+            min-height: 20px;
+        }
+
+        .chart-legend {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .chart-legend span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .chart-legend .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--gradient-main);
+        }
+
+        .chart-legend .dot.high {
+            background: #f093fb;
+        }
+
+        /* ===== AI CHAT ===== */
+        .ai-chat {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 28px 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+            backdrop-filter: var(--blur-bg);
+        }
+
+        .ai-chat .chat-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .ai-chat .chat-header i {
+            font-size: 1.8rem;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .ai-chat .chat-input {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .ai-chat .chat-input input {
+            flex: 1;
+            min-width: 200px;
+            padding: 16px 22px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .ai-chat .chat-input input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
+        }
+
+        .ai-chat .chat-input button {
+            padding: 16px 36px;
+            border: none;
+            border-radius: var(--radius-sm);
+            background: var(--gradient-main);
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            white-space: nowrap;
+        }
+
+        .ai-chat .chat-input button:hover {
+            transform: scale(1.04);
+            box-shadow: 0 8px 28px rgba(102, 126, 234, 0.4);
+        }
+
+        .ai-chat .chat-response {
+            margin-top: 18px;
+            padding: 18px 24px;
+            background: var(--bg-primary);
+            border-radius: var(--radius-sm);
+            border-left: 5px solid #667eea;
+            color: var(--text-secondary);
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        /* ===== TABLE ===== */
+        .table-wrap {
+            overflow-x: auto;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+            padding: 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        th,
+        td {
+            padding: 16px 20px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--gradient-main);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .status-badge {
+            padding: 4px 14px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-badge.good {
+            background: #10b981;
+            color: #fff;
+        }
+        .status-badge.warning {
+            background: #f59e0b;
+            color: #fff;
+        }
+        .status-badge.danger {
+            background: #ef4444;
+            color: #fff;
+        }
+
+        /* ===== AUTH PAGES ===== */
+        .auth-page {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .auth-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 48px 40px;
+            max-width: 440px;
+            width: 100%;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            backdrop-filter: var(--blur-bg);
+        }
+
+        .auth-card h2 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .auth-card .subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 28px;
+        }
+
+        .auth-card .form-group {
+            margin-bottom: 20px;
+        }
+
+        .auth-card .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+        }
+
+        .auth-card .form-group input,
+        .auth-card .form-group select {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .auth-card .form-group input:focus,
+        .auth-card .form-group select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
+        }
+
+        .auth-card .btn-primary {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: var(--radius-sm);
+            background: var(--gradient-main);
+            color: #fff;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .auth-card .btn-primary:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 28px rgba(102, 126, 234, 0.4);
+        }
+
+        .auth-card .auth-link {
+            text-align: center;
+            margin-top: 16px;
+            color: var(--text-muted);
+        }
+
+        .auth-card .auth-link a {
+            color: #667eea;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .auth-card .role-selector {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .auth-card .role-selector button {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            background: transparent;
+            color: var(--text-secondary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .auth-card .role-selector button.active {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+
+        .auth-card .role-selector button:hover {
+            border-color: #667eea;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: var(--bg-card);
+            border-top: 1px solid var(--border-color);
+            padding: 48px 24px 24px;
+            margin-top: 40px;
+            border-radius: var(--radius) var(--radius) 0 0;
+            backdrop-filter: var(--blur-bg);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 32px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-col h4 {
+            font-size: 1rem;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .footer-col a {
+            display: block;
+            color: var(--text-muted);
+            padding: 6px 0;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-col a:hover {
+            color: #667eea;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 32px;
+            margin-top: 32px;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .footer-bottom span {
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 16px;
+            margin-top: 12px;
+        }
+
+        .footer-social a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+        }
+
+        .footer-social a:hover {
+            background: var(--gradient-main);
+            color: #fff;
+            border-color: transparent;
+            transform: translateY(-3px);
+        }
+
+        /* ===== SETTINGS ===== */
+        .settings-group {
+            margin-bottom: 32px;
+        }
+
+        .settings-group h4 {
+            margin-bottom: 16px;
+            font-size: 1.1rem;
+        }
+
+        .settings-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .settings-item .left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .settings-item .left i {
+            width: 24px;
+            color: var(--text-muted);
+        }
+
+        .settings-item .toggle {
+            width: 50px;
+            height: 28px;
+            background: var(--border-color);
+            border-radius: 50px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .settings-item .toggle.active {
+            background: #667eea;
+        }
+
+        .settings-item .toggle .knob {
+            width: 22px;
+            height: 22px;
+            background: #fff;
+            border-radius: 50%;
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .settings-item .toggle.active .knob {
+            left: 25px;
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeDown {
+            from {
+                opacity: 0;
+                transform: translateY(-12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulseGlow {
+            0% {
+                box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.3);
+            }
+            100% {
+                box-shadow: 0 0 0 20px rgba(102, 126, 234, 0);
+            }
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 992px) {
+            .hero-content h1 {
+                font-size: 2.2rem;
+            }
+            .hero {
+                padding: 40px 28px;
+                min-height: 260px;
+            }
+            .hero-stats {
+                gap: 24px;
+                flex-wrap: wrap;
+            }
+            .hero-stat .number {
+                font-size: 1.8rem;
+            }
+            .notification-panel {
+                width: 320px;
+                right: -340px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            .hamburger {
+                display: flex;
+            }
+            .navbar {
+                padding: 0 16px;
+                height: 64px;
+            }
+            .navbar-brand {
+                font-size: 1rem;
+            }
+            .page-container {
+                padding-top: 76px;
+                padding-left: 14px;
+                padding-right: 14px;
+            }
+            .hero {
+                padding: 28px 18px;
+                min-height: 220px;
+            }
+            .hero-content h1 {
+                font-size: 1.6rem;
+            }
+            .hero-content p {
+                font-size: 0.95rem;
+            }
+            .hero-stats {
+                gap: 16px;
+            }
+            .hero-stat .number {
+                font-size: 1.4rem;
+            }
+            .grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .grid-2,
+            .grid-3,
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+            .card {
+                padding: 20px 16px;
+            }
+            .chart-area {
+                padding: 20px 14px;
+            }
+            .chart-bars {
+                height: 200px;
+                gap: 10px;
+            }
+            .chart-bar .bar {
+                max-width: 40px;
+            }
+            .chart-bar .bar-wrapper {
+                height: 170px;
+            }
+            .ai-chat .chat-input {
+                flex-direction: column;
+            }
+            .ai-chat .chat-input button {
+                width: 100%;
+                justify-content: center;
+            }
+            .theme-toggle,
+            .lang-toggle,
+            .notification-toggle {
+                width: 36px;
+                height: 36px;
+                font-size: 0.95rem;
+            }
+            .section-title {
+                font-size: 1.4rem;
+            }
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 24px;
+            }
+            .video-section video {
+                max-height: 300px;
+            }
+            .mobile-nav {
+                width: 280px;
+                padding: 72px 20px 32px;
+            }
+            .chart-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .chart-controls {
+                justify-content: center;
+            }
+            .notification-panel {
+                width: 300px;
+                right: -320px;
+                top: 64px;
+            }
+            .auth-card {
+                padding: 32px 24px;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .navbar-brand {
+                font-size: 0.85rem;
+                gap: 6px;
+            }
+            .hero-content h1 {
+                font-size: 1.3rem;
+            }
+            .hero {
+                padding: 20px 14px;
+                min-height: 180px;
+            }
+            .hero-stat .number {
+                font-size: 1.1rem;
+            }
+            .hero-stat .label {
+                font-size: 0.65rem;
+            }
+            .hero-stats {
+                gap: 12px;
+            }
+            .card h3 {
+                font-size: 1rem;
+            }
+            .card p {
+                font-size: 0.85rem;
+            }
+            .chart-bars {
+                height: 160px;
+                gap: 6px;
+                padding: 0 2px;
+            }
+            .chart-bar .bar {
+                max-width: 30px;
+                min-height: 3px;
+            }
+            .chart-bar .bar-wrapper {
+                height: 130px;
+            }
+            .chart-bar .bar-value {
+                font-size: 0.65rem;
+                min-height: 18px;
+            }
+            .chart-bar .bar-label {
+                font-size: 0.6rem;
+                min-height: 16px;
+            }
+            .chart-controls button {
+                padding: 5px 14px;
+                font-size: 0.7rem;
+            }
+            .ai-chat .chat-response {
+                font-size: 0.85rem;
+                padding: 14px 16px;
+                min-height: 48px;
+            }
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .mobile-nav {
+                width: 240px;
+                padding: 64px 16px 24px;
+            }
+            .mobile-nav a {
+                padding: 12px 14px;
+                font-size: 0.9rem;
+            }
+            th,
+            td {
+                padding: 10px 12px;
+                font-size: 0.8rem;
+            }
+            .video-section video {
+                max-height: 200px;
+            }
+            .hero-badge {
+                font-size: 0.7rem;
+                padding: 6px 16px;
+            }
+            .notification-panel {
+                width: 260px;
+                right: -280px;
+            }
+            .auth-card {
+                padding: 24px 16px;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .navbar {
+                padding: 0 10px;
+                height: 56px;
+            }
+            .navbar-brand {
+                font-size: 0.7rem;
+            }
+            .page-container {
+                padding-top: 66px;
+                padding-left: 8px;
+                padding-right: 8px;
+            }
+            .hero-content h1 {
+                font-size: 1.1rem;
+            }
+            .hero-content p {
+                font-size: 0.8rem;
+            }
+            .hero {
+                padding: 14px 10px;
+                min-height: 150px;
+                border-radius: var(--radius-sm);
+            }
+            .hero-stat .number {
+                font-size: 0.95rem;
+            }
+            .hero-stat .label {
+                font-size: 0.55rem;
+            }
+            .card {
+                padding: 14px 12px;
+                border-radius: var(--radius-sm);
+            }
+            .card-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.1rem;
+            }
+            .section-title {
+                font-size: 1.1rem;
+            }
+            .chart-area {
+                padding: 12px 8px;
+            }
+            .chart-bars {
+                height: 130px;
+                gap: 4px;
+            }
+            .chart-bar .bar {
+                max-width: 22px;
+                min-height: 2px;
+            }
+            .chart-bar .bar-wrapper {
+                height: 100px;
+            }
+            .chart-bar .bar-value {
+                font-size: 0.55rem;
+                min-height: 14px;
+            }
+            .chart-bar .bar-label {
+                font-size: 0.5rem;
+                min-height: 14px;
+            }
+            .chart-controls button {
+                padding: 4px 10px;
+                font-size: 0.6rem;
+            }
+            .chart-header h3 {
+                font-size: 0.9rem;
+            }
+            .ai-chat {
+                padding: 14px 10px;
+            }
+            .ai-chat .chat-input input {
+                padding: 10px 12px;
+                font-size: 0.8rem;
+                min-width: 120px;
+            }
+            .ai-chat .chat-input button {
+                padding: 10px 14px;
+                font-size: 0.8rem;
+            }
+            .ai-chat .chat-response {
+                font-size: 0.75rem;
+                padding: 10px 12px;
+                min-height: 40px;
+            }
+            .mobile-nav {
+                width: 200px;
+                padding: 56px 12px 20px;
+            }
+            .mobile-nav a {
+                padding: 10px 12px;
+                font-size: 0.8rem;
+                gap: 10px;
+            }
+            .mobile-nav .mobile-lang button {
+                font-size: 0.6rem;
+                padding: 6px 4px;
+                min-width: 36px;
+            }
+            .footer {
+                padding: 24px 12px 16px;
+            }
+            .footer-col a {
+                font-size: 0.75rem;
+            }
+            .footer-bottom {
+                font-size: 0.65rem;
+                padding-top: 20px;
+            }
+            .video-section video {
+                max-height: 150px;
+            }
+            th,
+            td {
+                padding: 6px 8px;
+                font-size: 0.65rem;
+            }
+            .theme-toggle,
+            .lang-toggle,
+            .notification-toggle {
+                width: 28px;
+                height: 28px;
+                font-size: 0.7rem;
+            }
+            .nav-controls {
+                gap: 4px;
+            }
+            .hero-badge {
+                font-size: 0.6rem;
+                padding: 4px 12px;
+            }
+            .notification-panel {
+                width: 200px;
+                right: -220px;
+            }
+            .auth-card h2 {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ===== LOADER ===== -->
+    <div id="loader">
+        <div class="loader-spinner"></div>
+        <div class="loader-text">AI Analytics Platform</div>
+        <div style="font-size:0.85rem; color:var(--text-muted);">Yuklanmoqda...</div>
+    </div>
+
+    <!-- ===== CONFETTI CONTAINER ===== -->
+    <div class="confetti-container" id="confettiContainer"></div>
+
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar" id="navbar">
+        <a href="#" class="navbar-brand" id="brandLink">
+            <i class="fas fa-robot"></i>
+            <span class="brand-text">AI Analytics</span>
+        </a>
+
+        <ul class="nav-links" id="navLinks">
+            <li><a class="active" data-page="dashboard"><i class="fas fa-chart-pie"></i> <span data-lang-key="nav_dashboard">Dashboard</span></a></li>
+            <li><a data-page="analytics"><i class="fas fa-brain"></i> <span data-lang-key="nav_analytics">Analytics</span></a></li>
+            <li><a data-page="students"><i class="fas fa-users"></i> <span data-lang-key="nav_students">Students</span></a></li>
+            <li><a data-page="reports"><i class="fas fa-file-alt"></i> <span data-lang-key="nav_reports">Reports</span></a></li>
+            <li><a data-page="settings"><i class="fas fa-cog"></i> <span data-lang-key="nav_settings">Settings</span></a></li>
+            <li><a data-page="auth" id="authNavBtn"><i class="fas fa-user"></i> <span data-lang-key="nav_login">Login</span></a></li>
+        </ul>
+
+        <div class="nav-controls">
+            <button class="notification-toggle" id="notificationToggle" aria-label="Notifications">
+                <i class="fas fa-bell"></i>
+                <span class="notif-dot"></span>
+            </button>
+
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <i class="fas fa-moon"></i>
+            </button>
+
+            <div class="lang-dropdown">
+                <button class="lang-toggle" id="langToggle" aria-label="Toggle language">
+                    <i class="fas fa-globe"></i>
+                </button>
+                <div class="lang-dropdown-content" id="langDropdown">
+                    <button data-lang="uz"><i class="fas fa-flag"></i> O'zbek</button>
+                    <button data-lang="ru"><i class="fas fa-flag"></i> Русский</button>
+                    <button data-lang="en"><i class="fas fa-flag"></i> English</button>
+                    <button data-lang="tr"><i class="fas fa-flag"></i> Türkçe</button>
+                </div>
+            </div>
+
+            <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ===== NOTIFICATION PANEL ===== -->
+    <div class="notification-panel" id="notificationPanel">
+        <div class="notif-header">
+            <h4>📬 Bildirishnomalar</h4>
+            <span style="font-size:0.8rem; color:var(--text-muted); cursor:pointer;" id="clearNotifs">Hammasini o'qish</span>
+        </div>
+        <div id="notifList">
+            <div class="notif-item">
+                <div class="notif-icon warning"><i class="fas fa-exclamation-triangle"></i></div>
+                <div class="notif-content">
+                    <h4>Baholar tushishi</h4>
+                    <p>Ali Karimov matematika fanidan 15% ga tushdi</p>
+                </div>
+                <span class="notif-time">5 min</span>
+            </div>
+            <div class="notif-item">
+                <div class="notif-icon info"><i class="fas fa-calendar"></i></div>
+                <div class="notif-content">
+                    <h4>Imtihon yaqinlashmoqda</h4>
+                    <p>Fizika fanidan imtihonga 3 kun qoldi</p>
+                </div>
+                <span class="notif-time">1 soat</span>
+            </div>
+            <div class="notif-item">
+                <div class="notif-icon success"><i class="fas fa-file-pdf"></i></div>
+                <div class="notif-content">
+                    <h4>Yangi hisobot</h4>
+                    <p>Oylik hisobot tayyorlandi. Yuklab olishingiz mumkin</p>
+                </div>
+                <span class="notif-time">2 soat</span>
+            </div>
+            <div class="notif-item">
+                <div class="notif-icon danger"><i class="fas fa-user-minus"></i></div>
+                <div class="notif-content">
+                    <h4>Davomat pasayishi</h4>
+                    <p>Jahongir Rahimov 3 kun ketma-ket kelmadi</p>
+                </div>
+                <span class="notif-time">1 kun</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MOBILE NAV ===== -->
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+    <div class="mobile-nav" id="mobileNav">
+        <a class="active" data-page="dashboard"><i class="fas fa-chart-pie"></i> <span data-lang-key="nav_dashboard">Dashboard</span></a>
+        <a data-page="analytics"><i class="fas fa-brain"></i> <span data-lang-key="nav_analytics">Analytics</span></a>
+        <a data-page="students"><i class="fas fa-users"></i> <span data-lang-key="nav_students">Students</span></a>
+        <a data-page="reports"><i class="fas fa-file-alt"></i> <span data-lang-key="nav_reports">Reports</span></a>
+        <a data-page="settings"><i class="fas fa-cog"></i> <span data-lang-key="nav_settings">Settings</span></a>
+        <a data-page="auth" id="mobileAuthNav"><i class="fas fa-user"></i> <span data-lang-key="nav_login">Login</span></a>
+        <div class="mobile-divider"></div>
+        <div style="font-weight:600; color:var(--text-muted); font-size:0.8rem; padding:6px 14px;" data-lang-key="language">Til</div>
+        <div class="mobile-lang">
+            <button data-lang="uz" class="active-lang">O'z</button>
+            <button data-lang="ru">Ru</button>
+            <button data-lang="en">En</button>
+            <button data-lang="tr">Tr</button>
+        </div>
+        <div class="mobile-divider"></div>
+        <a href="#" id="mobileThemeToggle"><i class="fas fa-circle-half-stroke"></i> <span data-lang-key="theme_toggle">Mavzu</span></a>
+    </div>
+
+    <!-- ===== PAGE CONTAINER ===== -->
+    <div class="page-container" id="pageContainer">
+
+        <!-- ===== PAGE 1: DASHBOARD ===== -->
+        <div class="page active" id="page-dashboard">
+            <section class="hero" id="heroDashboard">
+                <div class="hero-bg-slideshow" id="slideshow">
+                    <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200');"></div>
+                    <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200');"></div>
+                    <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1531482615713-2afd69097998?w=1200');"></div>
+                    <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200');"></div>
+                    <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=1200');"></div>
+                    <div class="slide-overlay"></div>
+                </div>
+                <div class="hero-content">
+                    <h1>AI <span>Academic Analytics</span> Platform</h1>
+                    <p>Real-time student performance analysis, predictive insights, and personalized learning paths powered by artificial intelligence.</p>
+                    <div class="hero-badge">
+                        <i class="fas fa-sparkles"></i>
+                        <span>AI-Powered · Smart Predictions · 2026</span>
+                    </div>
+                    <div class="hero-stats">
+                        <div class="hero-stat"><div class="number" id="statStudents">1,284</div><div class="label" data-lang-key="stat_students">Students</div></div>
+                        <div class="hero-stat"><div class="number" id="statAccuracy">94%</div><div class="label" data-lang-key="stat_accuracy">Accuracy</div></div>
+                        <div class="hero-stat"><div class="number" id="statCourses">24</div><div class="label" data-lang-key="stat_courses">Courses</div></div>
+                    </div>
+                </div>
+            </section>
+
+            <h2 class="section-title"><i class="fas fa-cubes"></i> <span data-lang-key="features_title">Core Features</span></h2>
+            <div class="grid" id="featuresGrid">
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-chart-line"></i></div>
+                    <h3 data-lang-key="card1_title">AI Performance Analyzer</h3>
+                    <p data-lang-key="card1_desc">Analyzes test results, identifies weak topics, and recommends next week's study plan.</p>
+                    <span class="tag">AI</span>
+                    <div class="progress-bar"><div class="fill" style="width:92%;"></div></div>
+                </div>
+                <div class="card">
+                    <div class="card-icon green"><i class="fas fa-graduation-cap"></i></div>
+                    <h3 data-lang-key="card2_title">Smart Learning Dashboard</h3>
+                    <p data-lang-key="card2_desc">Daily, weekly, and monthly progress graphs with study hours and assignments.</p>
+                    <span class="tag">Analytics</span>
+                    <div class="progress-bar"><div class="fill" style="width:78%;"></div></div>
+                </div>
+                <div class="card">
+                    <div class="card-icon purple"><i class="fas fa-robot"></i></div>
+                    <h3 data-lang-key="card3_title">AI Personal Study Coach</h3>
+                    <p data-lang-key="card3_desc">Custom plans based on habits, exam countdown, and motivational reminders.</p>
+                    <span class="tag">Coach</span>
+                    <div class="progress-bar"><div class="fill" style="width:85%;"></div></div>
+                </div>
+                <div class="card">
+                    <div class="card-icon yellow"><i class="fas fa-bullseye"></i></div>
+                    <h3 data-lang-key="card4_title">Exam Success Predictor</h3>
+                    <p data-lang-key="card4_desc">Predicts final results, identifies at-risk students, and shows focus areas.</p>
+                    <span class="tag">Prediction</span>
+                    <div class="progress-bar"><div class="fill" style="width:70%;"></div></div>
+                </div>
+                <div class="card">
+                    <div class="card-icon pink"><i class="fas fa-fire"></i></div>
+                    <h3 data-lang-key="card5_title">Learning Habit Tracker</h3>
+                    <p data-lang-key="card5_desc">Tracks daily study hours, streaks, and goal completion percentages.</p>
+                    <span class="tag">Habits</span>
+                    <div class="progress-bar"><div class="fill" style="width:63%;"></div></div>
+                </div>
+                <div class="card">
+                    <div class="card-icon blue"><i class="fas fa-homework"></i></div>
+                    <h3 data-lang-key="card6_title">AI Homework Analyzer</h3>
+                    <p data-lang-key="card6_desc">Analyzes homework errors, detects patterns, and suggests extra practice.</p>
+                    <span class="tag">Homework</span>
+                    <div class="progress-bar"><div class="fill" style="width:81%;"></div></div>
+                </div>
+            </div>
+
+            <!-- Weekly Chart -->
+            <div class="chart-area">
+                <div class="chart-header">
+                    <h3>
+                        <i class="fas fa-chart-bar"></i>
+                        <span data-lang-key="chart_title">Weekly Performance</span>
+                    </h3>
+                    <div class="chart-controls">
+                        <button class="active" data-period="week" data-lang-key="chart_week">Hafta</button>
+                        <button data-period="month" data-lang-key="chart_month">Oy</button>
+                        <button data-period="year" data-lang-key="chart_year">Yil</button>
+                    </div>
+                </div>
+                <div class="chart-bars-wrapper">
+                    <div class="chart-bars" id="chartBars"></div>
+                </div>
+                <div class="chart-legend">
+                    <span><span class="dot"></span> <span data-lang-key="chart_performance">Performance (%)</span></span>
+                    <span><span class="dot high"></span> <span data-lang-key="chart_peak">Peak Performance</span></span>
+                </div>
+            </div>
+
+            <!-- AI Chat -->
+            <div class="ai-chat">
+                <div class="chat-header">
+                    <i class="fas fa-comment-dots"></i>
+                    <div>
+                        <h3 style="font-size:1rem;" data-lang-key="chat_title">AI Assistant</h3>
+                        <span style="font-size:0.75rem; color:var(--text-muted);" data-lang-key="chat_sub">Ask about your performance</span>
+                    </div>
+                </div>
+                <div class="chat-input">
+                    <input type="text" id="chatInput" placeholder="Masalan: Nega matematikadan natijam pasaydi?" data-lang-key="chat_placeholder" />
+                    <button id="chatSend"><i class="fas fa-paper-plane"></i> <span data-lang-key="chat_send">Send</span></button>
+                </div>
+                <div class="chat-response" id="chatResponse">
+                    <i class="fas fa-robot" style="margin-right:12px; opacity:0.5;"></i>
+                    <span data-lang-key="chat_default">Assalomu alaykum! Men sizga o'qish jarayonida yordam bera olaman. Savolingizni yozing.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== PAGE 2: ANALYTICS ===== -->
+        <div class="page" id="page-analytics">
+            <section class="hero" style="background:var(--bg-card); border:1px solid var(--border-color);">
+                <div class="hero-content" style="color:var(--text-primary);">
+                    <h1 style="color:var(--text-primary);">📊 <span style="background:var(--gradient-main); -webkit-background-clip:text; -webkit-text-fill-color:transparent;" data-lang-key="analytics_title">Analytics</span> <span data-lang-key="analytics_dashboard">Dashboard</span></h1>
+                    <p style="color:var(--text-secondary);" data-lang-key="analytics_desc">Deep insights into student performance, trends, and predictive analytics.</p>
+                </div>
+            </section>
+
+            <div class="grid grid-2">
+                <div class="card">
+                    <div class="card-icon green"><i class="fas fa-arrow-up"></i></div>
+                    <h3 data-lang-key="analytics_trends">Performance Trends</h3>
+                    <p data-lang-key="analytics_trends_desc">Overall class average increased by 12% this semester.</p>
+                    <div class="progress-bar"><div class="fill" style="width:87%;"></div></div>
+                </div>
+                <div class="card">
+                    <div class="card-icon yellow"><i class="fas fa-exclamation-triangle"></i></div>
+                    <h3 data-lang-key="analytics_risk">At-Risk Students</h3>
+                    <p data-lang-key="analytics_risk_desc">8 students show declining performance. Early intervention recommended.</p>
+                    <div class="progress-bar"><div class="fill" style="width:34%;"></div></div>
+                </div>
+                <div class="card">
+                    <div class="card-icon purple"><i class="fas fa-clock"></i></div>
+                    <h3 data-lang-key="analytics_time">Study Time Analysis</h3>
+                    <p data-lang-key="analytics_time_desc">Average study time: 4.2 hours/day. Most productive: 9-11 AM.</p>
+                    <div class="progress-bar"><div class="fill" style="width:76%;"></div></div>
+                </div>
+                <div class="card">
+                    <div class="card-icon pink"><i class="fas fa-trophy"></i></div>
+                    <h3 data-lang-key="analytics_top">Top Performers</h3>
+                    <p data-lang-key="analytics_top_desc">12 students with 90%+ average. Best improvement: +28% this month.</p>
+                    <div class="progress-bar"><div class="fill" style="width:92%;"></div></div>
+                </div>
+            </div>
+
+            <!-- Monthly Trend -->
+            <div class="chart-area">
+                <div class="chart-header">
+                    <h3>
+                        <i class="fas fa-chart-line"></i>
+                        <span data-lang-key="analytics_monthly">Oylik Progress Tendensiyasi</span>
+                    </h3>
+                    <div class="chart-controls">
+                        <button class="active" data-trend="6month">6 oy</button>
+                        <button data-trend="12month">12 oy</button>
+                        <button data-trend="all">Barcha</button>
+                    </div>
+                </div>
+                <div class="chart-bars-wrapper">
+                    <div class="chart-bars" id="trendBars"></div>
+                </div>
+                <div class="chart-legend">
+                    <span><span class="dot"></span> <span>Progress (%)</span></span>
+                    <span><span class="dot high"></span> <span>Eng yuqori o'sish</span></span>
+                </div>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th data-lang-key="table_subject">Subject</th><th data-lang-key="table_avg">Average</th><th data-lang-key="table_pass">Pass Rate</th><th data-lang-key="table_trend">Trend</th></tr></thead>
+                    <tbody>
+                        <tr><td data-lang-key="subject_math">Mathematics</td><td>78%</td><td>86%</td><td><span class="status-badge good">↑ 5%</span></td></tr>
+                        <tr><td data-lang-key="subject_physics">Physics</td><td>65%</td><td>72%</td><td><span class="status-badge warning">↓ 2%</span></td></tr>
+                        <tr><td data-lang-key="subject_english">English</td><td>89%</td><td>94%</td><td><span class="status-badge good">↑ 8%</span></td></tr>
+                        <tr><td data-lang-key="subject_chemistry">Chemistry</td><td>72%</td><td>78%</td><td><span class="status-badge good">↑ 3%</span></td></tr>
+                        <tr><td data-lang-key="subject_history">History</td><td>81%</td><td>88%</td><td><span class="status-badge good">↑ 4%</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ===== PAGE 3: STUDENTS ===== -->
+        <div class="page" id="page-students">
+            <section class="hero" style="background:var(--bg-card); border:1px solid var(--border-color);">
+                <div class="hero-content" style="color:var(--text-primary);">
+                    <h1 style="color:var(--text-primary);">👨‍🎓 <span style="background:var(--gradient-main); -webkit-background-clip:text; -webkit-text-fill-color:transparent;" data-lang-key="students_title">Students</span> <span data-lang-key="students_overview">Overview</span></h1>
+                    <p style="color:var(--text-secondary);" data-lang-key="students_desc">Complete list of all students with their performance metrics and status.</p>
+                </div>
+            </section>
+
+            <div class="grid grid-2">
+                <div class="card">
+                    <div class="card-icon blue"><i class="fas fa-user-graduate"></i></div>
+                    <h3 data-lang-key="students_total">Total Students</h3>
+                    <p style="font-size:2.2rem; font-weight:800; background:var(--gradient-main); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">1,284</p>
+                    <p data-lang-key="students_active">Active: 1,201 · Inactive: 83</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon purple"><i class="fas fa-users"></i></div>
+                    <h3 data-lang-key="students_distribution">Class Distribution</h3>
+                    <p>Grade 10: 342 · Grade 11: 458 · Grade 12: 484</p>
+                    <div style="display:flex; gap:8px; margin-top:8px;">
+                        <span style="background:#667eea; padding:4px 12px; border-radius:50px; font-size:0.7rem; color:#fff;">10th</span>
+                        <span style="background:#764ba2; padding:4px 12px; border-radius:50px; font-size:0.7rem; color:#fff;">11th</span>
+                        <span style="background:#f093fb; padding:4px 12px; border-radius:50px; font-size:0.7rem; color:#fff;">12th</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>#</th><th data-lang-key="table_name">Name</th><th data-lang-key="table_class">Class</th><th data-lang-key="table_avg">Average</th><th data-lang-key="table_attendance">Attendance</th><th data-lang-key="table_status">Status</th></tr></thead>
+                    <tbody>
+                        <tr><td>1</td><td>Ali Karimov</td><td>10-A</td><td>92%</td><td>98%</td><td><span class="status-badge good" data-lang-key="status_excellent">Excellent</span></td></tr>
+                        <tr><td>2</td><td>Zarina Ismailova</td><td>11-B</td><td>87%</td><td>95%</td><td><span class="status-badge good" data-lang-key="status_good">Good</span></td></tr>
+                        <tr><td>3</td><td>Jahongir Rahimov</td><td>12-A</td><td>64%</td><td>72%</td><td><span class="status-badge danger" data-lang-key="status_risk">At Risk</span></td></tr>
+                        <tr><td>4</td><td>Dilnoza Akhmedova</td><td>10-B</td><td>79%</td><td>88%</td><td><span class="status-badge warning" data-lang-key="status_support">Needs Support</span></td></tr>
+                        <tr><td>5</td><td>Shohruh Yakubov</td><td>11-A</td><td>95%</td><td>100%</td><td><span class="status-badge good" data-lang-key="status_outstanding">Outstanding</span></td></tr>
+                        <tr><td>6</td><td>Madina Tursunova</td><td>12-B</td><td>71%</td><td>80%</td><td><span class="status-badge warning" data-lang-key="status_support">Needs Support</span></td></tr>
+                        <tr><td>7</td><td>Bekzod Yuldashev</td><td>10-A</td><td>83%</td><td>92%</td><td><span class="status-badge good" data-lang-key="status_good">Good</span></td></tr>
+                        <tr><td>8</td><td>Nigora Saidova</td><td>11-B</td><td>58%</td><td>65%</td><td><span class="status-badge danger" data-lang-key="status_risk">At Risk</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ===== PAGE 4: REPORTS ===== -->
+        <div class="page" id="page-reports">
+            <section class="hero" style="background:var(--bg-card); border:1px solid var(--border-color);">
+                <div class="hero-content" style="color:var(--text-primary);">
+                    <h1 style="color:var(--text-primary);">📄 <span style="background:var(--gradient-main); -webkit-background-clip:text; -webkit-text-fill-color:transparent;" data-lang-key="reports_title">Reports</span> <span data-lang-key="reports_analytics">& Analytics</span></h1>
+                    <p style="color:var(--text-secondary);" data-lang-key="reports_desc">Generate and export detailed reports on student performance, attendance, and more.</p>
+                </div>
+            </section>
+
+            <div class="grid grid-2">
+                <div class="card">
+                    <div class="card-icon green"><i class="fas fa-file-pdf"></i></div>
+                    <h3 data-lang-key="reports_performance">Performance Report</h3>
+                    <p data-lang-key="reports_performance_desc">Comprehensive PDF report with all student metrics.</p>
+                    <span class="tag" data-lang-key="reports_export">Export</span>
+                    <button onclick="exportPDF()" style="margin-top:12px; padding:10px 20px; border:none; border-radius:var(--radius-sm); background:var(--gradient-main); color:#fff; font-weight:600; cursor:pointer; width:100%;">
+                        <i class="fas fa-file-pdf"></i> PDF Yuklab olish
+                    </button>
+                    <div class="progress-bar"><div class="fill" style="width:100%;"></div></div>
+                </div>
+                <div class="card">
+                    <div class="card-icon yellow"><i class="fas fa-file-excel"></i></div>
+                    <h3 data-lang-key="reports_attendance">Attendance Report</h3>
+                    <p data-lang-key="reports_attendance_desc">Excel export with detailed attendance records.</p>
+                    <span class="tag" data-lang-key="reports_export">Export</span>
+                    <button onclick="exportExcel()" style="margin-top:12px; padding:10px 20px; border:none; border-radius:var(--radius-sm); background:linear-gradient(135deg,#10b981,#059669); color:#fff; font-weight:600; cursor:pointer; width:100%;">
+                        <i class="fas fa-file-excel"></i> Excel Yuklab olish
+                    </button>
+                    <div class="progress-bar"><div class="fill" style="width:100%;"></div></div>
+                </div>
+                <div class="card">
+                    <div class="card-icon purple"><i class="fas fa-print"></i></div>
+                    <h3 data-lang-key="reports_summary">Class Summary</h3>
+                    <p data-lang-key="reports_summary_desc">Printable summary for each class with average scores.</p>
+                    <span class="tag" data-lang-key="reports_print">Print</span>
+                    <button onclick="window.print()" style="margin-top:12px; padding:10px 20px; border:none; border-radius:var(--radius-sm); background:linear-gradient(135deg,#8b5cf6,#6d28d9); color:#fff; font-weight:600; cursor:pointer; width:100%;">
+                        <i class="fas fa-print"></i> Chop etish
+                    </button>
+                    <div class="progress-bar"><div class="fill" style="width:100%;"></div></div>
+                </div>
+                <div class="card">
+                    <div class="card-icon pink"><i class="fas fa-chart-simple"></i></div>
+                    <h3 data-lang-key="reports_predictive">Predictive Analytics</h3>
+                    <p data-lang-key="reports_predictive_desc">AI-generated predictions for final exam results.</p>
+                    <span class="tag">AI</span>
+                    <div class="progress-bar"><div class="fill" style="width:78%;"></div></div>
+                </div>
+            </div>
+
+            <!-- Video Section -->
+            <div class="video-section">
+                <video controls autoplay muted loop playsinline>
+                    <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                </video>
+                <div class="video-caption">
+                    <i class="fas fa-play-circle" style="color:#667eea;"></i>
+                    <span data-lang-key="video_caption">AI Academic Analytics Platform - Overview (20 sec)</span>
+                </div>
+            </div>
+
+            <div class="chart-area">
+                <h3 style="margin-bottom:16px;"><i class="fas fa-file-alt" style="margin-right:10px; background:var(--gradient-main); -webkit-background-clip:text; -webkit-text-fill-color:transparent;"></i> <span data-lang-key="reports_status">Report Generation Status</span></h3>
+                <div style="display:flex; flex-direction:column; gap:12px;">
+                    <div><span style="font-weight:600;" data-lang-key="reports_performance">Performance Report</span> <span style="float:right; color:var(--text-muted);" data-lang-key="reports_generated_2min">Generated: 2 min ago</span></div>
+                    <div class="progress-bar"><div class="fill" style="width:100%;"></div></div>
+                    <div><span style="font-weight:600;" data-lang-key="reports_attendance">Attendance Report</span> <span style="float:right; color:var(--text-muted);" data-lang-key="reports_generated_15min">Generated: 15 min ago</span></div>
+                    <div class="progress-bar"><div class="fill" style="width:100%;"></div></div>
+                    <div><span style="font-weight:600;" data-lang-key="reports_summary">Class Summary</span> <span style="float:right; color:var(--text-muted);" data-lang-key="reports_generated_1hour">Generated: 1 hour ago</span></div>
+                    <div class="progress-bar"><div class="fill" style="width:100%;"></div></div>
+                    <div><span style="font-weight:600;" data-lang-key="reports_predictive">Predictive Analytics</span> <span style="float:right; color:var(--text-muted);" data-lang-key="reports_processing">Processing...</span></div>
+                    <div class="progress-bar"><div class="fill" style="width:78%;"></div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== PAGE 5: SETTINGS ===== -->
+        <div class="page" id="page-settings">
+            <section class="hero" style="background:var(--bg-card); border:1px solid var(--border-color);">
+                <div class="hero-content" style="color:var(--text-primary);">
+                    <h1 style="color:var(--text-primary);">⚙️ <span style="background:var(--gradient-main); -webkit-background-clip:text; -webkit-text-fill-color:transparent;" data-lang-key="settings_title">Settings</span></h1>
+                    <p style="color:var(--text-secondary);" data-lang-key="settings_desc">Manage your profile, notifications, and application preferences.</p>
+                </div>
+            </section>
+
+            <div class="grid-2" style="display:grid; gap:24px; margin-bottom:40px;">
+                <!-- Profile Settings -->
+                <div class="card">
+                    <h3><i class="fas fa-user-circle" style="color:#667eea;"></i> <span data-lang-key="settings_profile">Profile Settings</span></h3>
+                    <div class="settings-group">
+                        <div class="settings-item">
+                            <div class="left"><i class="fas fa-user"></i> <span data-lang-key="settings_name">Full Name</span></div>
+                            <input type="text" value="Ali Karimov" style="padding:8px 14px; border-radius:var(--radius-sm); border:1px solid var(--border-color); background:var(--bg-primary); color:var(--text-primary); width:160px;" />
+                        </div>
+                        <div class="settings-item">
+                            <div class="left"><i class="fas fa-envelope"></i> <span data-lang-key="settings_email">Email</span></div>
+                            <input type="email" value="ali@example.com" style="padding:8px 14px; border-radius:var(--radius-sm); border:1px solid var(--border-color); background:var(--bg-primary); color:var(--text-primary); width:160px;" />
+                        </div>
+                        <div class="settings-item">
+                            <div class="left"><i class="fas fa-lock"></i> <span data-lang-key="settings_password">Change Password</span></div>
+                            <button style="padding:8px 16px; border:none; border-radius:var(--radius-sm); background:var(--gradient-main); color:#fff; cursor:pointer;">O'zgartirish</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notification Settings -->
+                <div class="card">
+                    <h3><i class="fas fa-bell" style="color:#f59e0b;"></i> <span data-lang-key="settings_notifications">Notification Settings</span></h3>
+                    <div class="settings-group">
+                        <div class="settings-item">
+                            <div class="left"><i class="fas fa-chart-line"></i> <span data-lang-key="settings_grade_alerts">Grade Alerts</span></div>
+                            <div class="toggle active" onclick="toggleSwitch(this)"><div class="knob"></div></div>
+                        </div>
+                        <div class="settings-item">
+                            <div class="left"><i class="fas fa-calendar"></i> <span data-lang-key="settings_exam_reminders">Exam Reminders</span></div>
+                            <div class="toggle active" onclick="toggleSwitch(this)"><div class="knob"></div></div>
+                        </div>
+                        <div class="settings-item">
+                            <div class="left"><i class="fas fa-file-alt"></i> <span data-lang-key="settings_report_alerts">Report Alerts</span></div>
+                            <div class="toggle" onclick="toggleSwitch(this)"><div class="knob"></div></div>
+                        </div>
+                        <div class="settings-item">
+                            <div class="left"><i class="fas fa-user-minus"></i> <span data-lang-key="settings_attendance_alerts">Attendance Alerts</span></div>
+                            <div class="toggle active" onclick="toggleSwitch(this)"><div class="knob"></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Appearance -->
+                <div class="card">
+                    <h3><i class="fas fa-palette" style="color:#8b5cf6;"></i> <span data-lang-key="settings_appearance">Appearance</span></h3>
+                    <div class="settings-group">
+                        <div class="settings-item">
+                            <div class="left"><i class="fas fa-moon"></i> <span data-lang-key="settings_dark_mode">Dark Mode</span></div>
+                            <div class="toggle active" onclick="toggleTheme()"><div class="knob"></div></div>
+                        </div>
+                        <div class="settings-item">
+                            <div class="left"><i class="fas fa-globe"></i> <span data-lang-key="settings_language">Language</span></div>
+                            <select style="padding:8px 14px; border-radius:var(--radius-sm); border:1px solid var(--border-color); background:var(--bg-primary); color:var(--text-primary);">
+                                <option value="uz">O'zbek</option>
+                                <option value="ru">Русский</option>
+                                <option value="en">English</option>
+                                <option value="tr">Türkçe</option>
+                            </select>
+                        </div>
+                        <div class="settings-item">
+                            <div class="left"><i class="fas fa-font"></i> <span data-lang-key="settings_font_size">Font Size</span></div>
+                            <select style="padding:8px 14px; border-radius:var(--radius-sm); border:1px solid var(--border-color); background:var(--bg-primary); color:var(--text-primary);">
+                                <option value="small">Kichik</option>
+                                <option value="medium" selected>O'rta</option>
+                                <option value="large">Katta</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System -->
+                <div class="card">
+                    <h3><i class="fas fa-server" style="color:#10b981;"></i> <span data-lang-key="settings_system">System</span></h3>
+                    <div class="settings-group">
+                        <div class="settings-item">
+                            <div class="left"><i class="fas fa-database"></i> <span data-lang-key="settings_data_export">Export All Data</span></div>
+                            <button style="padding:8px 16px; border:none; border-radius:var(--radius-sm); background:#10b981; color:#fff; cursor:pointer;">Eksport</button>
+                        </div>
+                        <div class="settings-item">
+                            <div class="left"><i class="fas fa-upload"></i> <span data-lang-key="settings_import">Import Data</span></div>
+                            <button style="padding:8px 16px; border:none; border-radius:var(--radius-sm); background:#667eea; color:#fff; cursor:pointer;">Import</button>
+                        </div>
+                        <div class="settings-item">
+                            <div class="left"><i class="fas fa-trash"></i> <span data-lang-key="settings_clear_data">Clear All Data</span></div>
+                            <button style="padding:8px 16px; border:none; border-radius:var(--radius-sm); background:#ef4444; color:#fff; cursor:pointer;">O'chirish</button>
+                        </div>
+                        <div class="settings-item">
+                            <div class="left"><i class="fas fa-info-circle"></i> <span data-lang-key="settings_version">Version</span></div>
+                            <span style="color:var(--text-muted);">v2.0.0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== PAGE 6: AUTH (Login/Register) ===== -->
+        <div class="page" id="page-auth">
+            <div class="auth-page">
+                <div class="auth-card" id="authCard">
+                    <h2 id="authTitle">🔐 <span data-lang-key="auth_login_title">Kirish</span></h2>
+                    <p class="subtitle" id="authSubtitle" data-lang-key="auth_login_sub">Hisobingizga kiring</p>
+
+                    <div class="role-selector" id="roleSelector">
+                        <button class="active" data-role="admin" onclick="selectRole('admin')">👑 Admin</button>
+                        <button data-role="teacher" onclick="selectRole('teacher')">👨‍🏫 O'qituvchi</button>
+                        <button data-role="student" onclick="selectRole('student')">👨‍🎓 Talaba</button>
+                    </div>
+
+                    <div id="authForm">
+                        <div class="form-group">
+                            <label data-lang-key="auth_email">Email</label>
+                            <input type="email" placeholder="admin@example.com" id="authEmail" />
+                        </div>
+                        <div class="form-group">
+                            <label data-lang-key="auth_password">Parol</label>
+                            <input type="password" placeholder="••••••••" id="authPassword" />
+                        </div>
+                        <button class="btn-primary" onclick="handleAuth()">
+                            <span data-lang-key="auth_login_btn">Kirish</span>
+                        </button>
+                    </div>
+
+                    <div class="auth-link">
+                        <span data-lang-key="auth_no_account">Hisobingiz yo'qmi?</span>
+                        <a onclick="toggleAuthMode()" id="authToggleLink" data-lang-key="auth_register_link">Ro'yxatdan o'tish</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer" id="mainFooter">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4><i class="fas fa-robot" style="color:#667eea;"></i> AI Analytics</h4>
+                <p style="color:var(--text-muted); font-size:0.9rem; line-height:1.7;" data-lang-key="footer_desc">Smart academic analytics platform powered by AI.</p>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4 data-lang-key="footer_platform">Platform</h4>
+                <a href="#" data-lang-key="nav_dashboard">Dashboard</a>
+                <a href="#" data-lang-key="nav_analytics">Analytics</a>
+                <a href="#" data-lang-key="nav_students">Students</a>
+                <a href="#" data-lang-key="nav_reports">Reports</a>
+            </div>
+            <div class="footer-col">
+                <h4 data-lang-key="footer_resources">Resources</h4>
+                <a href="#" data-lang-key="footer_docs">Documentation</a>
+                <a href="#" data-lang-key="footer_api">API</a>
+                <a href="#" data-lang-key="footer_support">Support</a>
+                <a href="#" data-lang-key="footer_blog">Blog</a>
+            </div>
+            <div class="footer-col">
+                <h4 data-lang-key="footer_contact">Contact</h4>
+                <a href="#"><i class="fas fa-envelope"></i> info@aianalytics.com</a>
+                <a href="#"><i class="fas fa-phone"></i> +998 90 123 45 67</a>
+                <a href="#"><i class="fas fa-map-marker-alt"></i> Tashkent, Uzbekistan</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 <span>AI Academic Analytics Platform</span> — <span data-lang-key="footer_rights">All rights reserved.</span> Built with <i class="fas fa-heart" style="color:#f5576c;"></i></p>
+        </div>
+    </footer>
+
+    <script>
+        // ============================================================
+        // ===== LOADER (1 sekund) =====
+        // ============================================================
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hide');
+            }, 1000);
+        });
+
+        // ============================================================
+        // ===== CONFETTI =====
+        // ============================================================
+        function fireConfetti() {
+            const container = document.getElementById('confettiContainer');
+            const colors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#10b981', '#f59e0b'];
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.width = (Math.random() * 8 + 4) + 'px';
+                confetti.style.height = (Math.random() * 8 + 4) + 'px';
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+                confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                confetti.style.animationDelay = (Math.random() * 0.5) + 's';
+                container.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 3000);
+            }
+        }
+
+        // ============================================================
+        // ===== THEME =====
+        // ============================================================
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            const icon = document.querySelector('#themeToggle i');
+            if (next === 'dark') {
+                icon.className = 'fas fa-sun';
+            } else {
+                icon.className = 'fas fa-moon';
+            }
+            localStorage.setItem('theme', next);
+            // Update settings toggle
+            const toggles = document.querySelectorAll('#page-settings .toggle');
+            toggles.forEach(t => {
+                if (t.closest('.settings-item').querySelector('.fa-moon')) {
+                    if (next === 'dark') t.classList.add('active');
+                    else t.classList.remove('active');
+                }
+            });
+        }
+
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        if (savedTheme === 'dark') {
+            document.querySelector('#themeToggle i').className = 'fas fa-sun';
+        } else {
+            document.querySelector('#themeToggle i').className = 'fas fa-moon';
+        }
+
+        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+        document.getElementById('mobileThemeToggle').addEventListener('click', (e) => {
+            e.preventDefault();
+            toggleTheme();
+            closeMobile();
+        });
+
+        // ============================================================
+        // ===== TOGGLE SWITCH =====
+        // ============================================================
+        function toggleSwitch(el) {
+            el.classList.toggle('active');
+            // Show confetti when turning on
+            if (el.classList.contains('active')) {
+                fireConfetti();
+            }
+        }
+
+        // ============================================================
+        // ===== NOTIFICATIONS =====
+        // ============================================================
+        document.getElementById('notificationToggle').addEventListener('click', () => {
+            document.getElementById('notificationPanel').classList.toggle('open');
+        });
+
+        document.getElementById('clearNotifs').addEventListener('click', () => {
+            document.getElementById('notifList').innerHTML = `
+                <div style="padding:20px; text-align:center; color:var(--text-muted);">
+                    <i class="fas fa-check-circle" style="font-size:2rem; color:#10b981;"></i>
+                    <p style="margin-top:8px;">Barcha bildirishnomalar o'qildi</p>
+                </div>
+            `;
+            document.querySelector('.notif-dot').style.display = 'none';
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.notification-toggle') && !e.target.closest('.notification-panel')) {
+                document.getElementById('notificationPanel').classList.remove('open');
+            }
+        });
+
+        // ============================================================
+        // ===== LANGUAGE =====
+        // ============================================================
+        const translations = {
+            uz: {
+                nav_dashboard: 'Dashboard',
+                nav_analytics: 'Tahlil',
+                nav_students: 'Talabalar',
+                nav_reports: 'Hisobotlar',
+                nav_settings: 'Sozlamalar',
+                nav_login: 'Kirish',
+                stat_students: 'Talabalar',
+                stat_accuracy: 'Aniqlik',
+                stat_courses: 'Kurslar',
+                features_title: 'Asosiy xususiyatlar',
+                card1_title: 'AI Performance Analyzer',
+                card1_desc: 'Test natijalarini tahlil qiladi, zaif mavzularni aniqlaydi va keyingi hafta uchun reja beradi.',
+                card2_title: 'Smart Learning Dashboard',
+                card2_desc: 'Kunlik, haftalik va oylik progress grafiklari, o\'qish soatlari va topshiriqlar.',
+                card3_title: 'AI Personal Study Coach',
+                card3_desc: 'Odatlarga asoslangan shaxsiy reja, imtihon hisoblagichi va motivatsion eslatmalar.',
+                card4_title: 'Exam Success Predictor',
+                card4_desc: 'Yakuniy natijani bashorat qiladi, xavf ostidagi talabalarni aniqlaydi.',
+                card5_title: 'Learning Habit Tracker',
+                card5_desc: 'Kunlik o\'qish soatlari, ketma-ketlik va maqsad foizini kuzatadi.',
+                card6_title: 'AI Homework Analyzer',
+                card6_desc: 'Uy vazifalaridagi xatolarni tahlil qiladi, qo\'shimcha mashqlar tavsiya qiladi.',
+                chart_title: 'Haftalik samaradorlik',
+                chart_week: 'Hafta',
+                chart_month: 'Oy',
+                chart_year: 'Yil',
+                chart_performance: 'Samaradorlik (%)',
+                chart_peak: 'Eng yuqori ko\'rsatkich',
+                chat_title: 'AI Yordamchi',
+                chat_sub: 'Natijalaringiz haqida so\'rang',
+                chat_placeholder: 'Masalan: Nega matematikadan natijam pasaydi?',
+                chat_send: 'Yuborish',
+                chat_default: 'Assalomu alaykum! Men sizga o\'qish jarayonida yordam bera olaman. Savolingizni yozing.',
+                language: 'Til',
+                theme_toggle: 'Mavzu',
+                analytics_title: 'Analytics',
+                analytics_dashboard: 'Dashboard',
+                analytics_desc: 'Talabalar samaradorligi, tendensiyalar va bashoratli tahlillar haqida chuqur ma\'lumotlar.',
+                analytics_trends: 'Samaradorlik tendensiyalari',
+                analytics_trends_desc: 'Bu semestrda umumiy sinf o\'rtacha ko\'rsatkichi 12% ga oshdi.',
+                analytics_risk: 'Xavf ostidagi talabalar',
+                analytics_risk_desc: '8 talaba pasayib borayotgan ko\'rsatkichlarni ko\'rsatmoqda.',
+                analytics_time: 'O\'qish vaqti tahlili',
+                analytics_time_desc: 'O\'rtacha o\'qish vaqti: kuniga 4.2 soat. Eng samarali soatlar: 9-11 AM.',
+                analytics_top: 'Eng yaxshi talabalar',
+                analytics_top_desc: '90%+ o\'rtacha ko\'rsatkichga ega 12 talaba. Eng yaxshi o\'sish: bu oyda +28%.',
+                analytics_monthly: 'Oylik Progress Tendensiyasi',
+                table_subject: 'Fan',
+                table_avg: 'O\'rtacha ball',
+                table_pass: 'O\'tish darajasi',
+                table_trend: 'Tendensiya',
+                subject_math: 'Matematika',
+                subject_physics: 'Fizika',
+                subject_english: 'Ingliz tili',
+                subject_chemistry: 'Kimyo',
+                subject_history: 'Tarix',
+                students_title: 'Students',
+                students_overview: 'Overview',
+                students_desc: 'Barcha talabalar ro\'yxati, ularning ko\'rsatkichlari va holati.',
+                students_total: 'Jami talabalar',
+                students_active: 'Faol: 1,201 · No faol: 83',
+                students_distribution: 'Sinf bo\'yicha taqsimot',
+                table_name: 'Talaba ismi',
+                table_class: 'Sinf',
+                table_attendance: 'Davomat',
+                table_status: 'Holat',
+                status_excellent: 'A\'lo',
+                status_good: 'Yaxshi',
+                status_risk: 'Xavf ostida',
+                status_support: 'Yordam kerak',
+                status_outstanding: 'Ajoyib',
+                reports_title: 'Reports',
+                reports_analytics: '& Analytics',
+                reports_desc: 'Talabalar samaradorligi, davomat va boshqalar bo\'yicha batafsil hisobotlarni yarating.',
+                reports_performance: 'Samaradorlik hisoboti',
+                reports_performance_desc: 'Barcha talabalar ko\'rsatkichlari, tendensiyalar va bashoratlar bilan to\'liq PDF hisobot.',
+                reports_export: 'Eksport',
+                reports_attendance: 'Davomat hisoboti',
+                reports_attendance_desc: 'Batafsil davomat yozuvlari va korrelyatsiya tahlili bilan Excel eksporti.',
+                reports_summary: 'Sinf xulosasi',
+                reports_summary_desc: 'Har bir sinf uchun o\'rtacha ballar va eng yaxshi talabalar bilan chop etish uchun xulosa.',
+                reports_print: 'Chop etish',
+                reports_predictive: 'Bashoratli tahlil',
+                reports_predictive_desc: 'Yakuniy imtihon natijalari va aralashuv tavsiyalari uchun AI tomonidan yaratilgan bashoratlar.',
+                reports_status: 'Hisobot yaratish holati',
+                reports_generated_2min: 'Yaratilgan: 2 daqiqa oldin',
+                reports_generated_15min: 'Yaratilgan: 15 daqiqa oldin',
+                reports_generated_1hour: 'Yaratilgan: 1 soat oldin',
+                reports_processing: 'Ishlanmoqda...',
+                video_caption: 'AI Academic Analytics Platform - Umumiy ko\'rinish (20 sek)',
+                footer_desc: 'AI tomonidan quvvatlangan aqlli akademik analytics platformasi.',
+                footer_platform: 'Platforma',
+                footer_resources: 'Resurslar',
+                footer_docs: 'Hujjatlar',
+                footer_api: 'API',
+                footer_support: 'Qo\'llab-quvvatlash',
+                footer_blog: 'Blog',
+                footer_contact: 'Aloqa',
+                footer_rights: 'Barcha huquqlar himoyalangan.',
+                settings_title: 'Sozlamalar',
+                settings_desc: 'Profilingiz, xabarnomalar va dastur sozlamalarini boshqaring.',
+                settings_profile: 'Profil sozlamalari',
+                settings_name: 'To\'liq ism',
+                settings_email: 'Email',
+                settings_password: 'Parolni o\'zgartirish',
+                settings_notifications: 'Xabarnoma sozlamalari',
+                settings_grade_alerts: 'Baholar haqida xabar',
+                settings_exam_reminders: 'Imtihon eslatmalari',
+                settings_report_alerts: 'Hisobot xabarlari',
+                settings_attendance_alerts: 'Davomat xabarlari',
+                settings_appearance: 'Ko\'rinish',
+                settings_dark_mode: 'Qorong\'u rejim',
+                settings_language: 'Til',
+                settings_font_size: 'Shrift o\'lchami',
+                settings_system: 'Tizim',
+                settings_data_export: 'Barcha ma\'lumotlarni eksport qilish',
+                settings_import: 'Ma\'lumotlarni import qilish',
+                settings_clear_data: 'Barcha ma\'lumotlarni o\'chirish',
+                settings_version: 'Versiya',
+                auth_login_title: 'Kirish',
+                auth_login_sub: 'Hisobingizga kiring',
+                auth_register_title: 'Ro\'yxatdan o\'tish',
+                auth_register_sub: 'Yangi hisob yarating',
+                auth_email: 'Email',
+                auth_password: 'Parol',
+                auth_login_btn: 'Kirish',
+                auth_register_btn: 'Ro\'yxatdan o\'tish',
+                auth_no_account: 'Hisobingiz yo\'qmi?',
+                auth_have_account: 'Hisobingiz bormi?',
+                auth_register_link: 'Ro\'yxatdan o\'tish',
+                auth_login_link: 'Kirish',
+            },
+            ru: {
+                nav_dashboard: 'Панель',
+                nav_analytics: 'Аналитика',
+                nav_students: 'Студенты',
+                nav_reports: 'Отчёты',
+                nav_settings: 'Настройки',
+                nav_login: 'Вход',
+                stat_students: 'Студенты',
+                stat_accuracy: 'Точность',
+                stat_courses: 'Курсы',
+                features_title: 'Основные функции',
+                card1_title: 'AI Performance Analyzer',
+                card1_desc: 'Анализирует результаты тестов, определяет слабые темы и рекомендует план на неделю.',
+                card2_title: 'Smart Learning Dashboard',
+                card2_desc: 'Графики прогресса, часы обучения и выполнение заданий.',
+                card3_title: 'AI Personal Study Coach',
+                card3_desc: 'Индивидуальный план, обратный отсчёт до экзамена и мотивация.',
+                card4_title: 'Exam Success Predictor',
+                card4_desc: 'Прогнозирует итоговый результат, определяет студентов в зоне риска.',
+                card5_title: 'Learning Habit Tracker',
+                card5_desc: 'Отслеживает часы занятий, серии и процент выполнения целей.',
+                card6_title: 'AI Homework Analyzer',
+                card6_desc: 'Анализирует ошибки в домашних заданиях, рекомендует дополнительные упражнения.',
+                chart_title: 'Недельная эффективность',
+                chart_week: 'Неделя',
+                chart_month: 'Месяц',
+                chart_year: 'Год',
+                chart_performance: 'Эффективность (%)',
+                chart_peak: 'Пик эффективности',
+                chat_title: 'AI Ассистент',
+                chat_sub: 'Спросите о результатах',
+                chat_placeholder: 'Например: Почему упала успеваемость по математике?',
+                chat_send: 'Отправить',
+                chat_default: 'Здравствуйте! Я могу помочь вам в обучении. Напишите ваш вопрос.',
+                language: 'Язык',
+                theme_toggle: 'Тема',
+                analytics_title: 'Analytics',
+                analytics_dashboard: 'Dashboard',
+                analytics_desc: 'Глубокие данные об успеваемости студентов, тенденциях и прогнозной аналитике.',
+                analytics_trends: 'Тенденции производительности',
+                analytics_trends_desc: 'Средний балл по классу вырос на 12% в этом семестре.',
+                analytics_risk: 'Студенты в зоне риска',
+                analytics_risk_desc: '8 студентов показывают снижение успеваемости.',
+                analytics_time: 'Анализ времени обучения',
+                analytics_time_desc: 'Среднее время обучения: 4.2 часа в день. Самые продуктивные часы: 9-11 утра.',
+                analytics_top: 'Лучшие студенты',
+                analytics_top_desc: '12 студентов со средним баллом 90%+. Лучшее улучшение: +28% в этом месяце.',
+                analytics_monthly: 'Ежемесячный тренд прогресса',
+                table_subject: 'Предмет',
+                table_avg: 'Средний балл',
+                table_pass: 'Проходимость',
+                table_trend: 'Тренд',
+                subject_math: 'Математика',
+                subject_physics: 'Физика',
+                subject_english: 'Английский',
+                subject_chemistry: 'Химия',
+                subject_history: 'История',
+                students_title: 'Students',
+                students_overview: 'Overview',
+                students_desc: 'Полный список всех студентов с их показателями и статусом.',
+                students_total: 'Всего студентов',
+                students_active: 'Активных: 1,201 · Неактивных: 83',
+                students_distribution: 'Распределение по классам',
+                table_name: 'Имя студента',
+                table_class: 'Класс',
+                table_attendance: 'Посещаемость',
+                table_status: 'Статус',
+                status_excellent: 'Отлично',
+                status_good: 'Хорошо',
+                status_risk: 'В зоне риска',
+                status_support: 'Нужна поддержка',
+                status_outstanding: 'Выдающийся',
+                reports_title: 'Reports',
+                reports_analytics: '& Analytics',
+                reports_desc: 'Создавайте и экспортируйте подробные отчеты об успеваемости, посещаемости и многом другом.',
+                reports_performance: 'Отчет об успеваемости',
+                reports_performance_desc: 'Полный PDF-отчет со всеми показателями, тенденциями и прогнозами.',
+                reports_export: 'Экспорт',
+                reports_attendance: 'Отчет о посещаемости',
+                reports_attendance_desc: 'Экспорт в Excel с детальными записями посещаемости и анализом корреляции.',
+                reports_summary: 'Сводка по классам',
+                reports_summary_desc: 'Сводка для печати по каждому классу со средними баллами и лучшими студентами.',
+                reports_print: 'Печать',
+                reports_predictive: 'Прогнозная аналитика',
+                reports_predictive_desc: 'Прогнозы, созданные AI, для итоговых экзаменов и рекомендации по вмешательству.',
+                reports_status: 'Статус создания отчетов',
+                reports_generated_2min: 'Создан: 2 минуты назад',
+                reports_generated_15min: 'Создан: 15 минут назад',
+                reports_generated_1hour: 'Создан: 1 час назад',
+                reports_processing: 'Обработка...',
+                video_caption: 'AI Academic Analytics Platform - Обзор (20 сек)',
+                footer_desc: 'Умная академическая аналитическая платформа на основе AI.',
+                footer_platform: 'Платформа',
+                footer_resources: 'Ресурсы',
+                footer_docs: 'Документация',
+                footer_api: 'API',
+                footer_support: 'Поддержка',
+                footer_blog: 'Блог',
+                footer_contact: 'Контакты',
+                footer_rights: 'Все права защищены.',
+                settings_title: 'Настройки',
+                settings_desc: 'Управляйте своим профилем, уведомлениями и настройками приложения.',
+                settings_profile: 'Настройки профиля',
+                settings_name: 'Полное имя',
+                settings_email: 'Email',
+                settings_password: 'Изменить пароль',
+                settings_notifications: 'Настройки уведомлений',
+                settings_grade_alerts: 'Оповещения об оценках',
+                settings_exam_reminders: 'Напоминания об экзаменах',
+                settings_report_alerts: 'Оповещения об отчётах',
+                settings_attendance_alerts: 'Оповещения о посещаемости',
+                settings_appearance: 'Внешний вид',
+                settings_dark_mode: 'Тёмный режим',
+                settings_language: 'Язык',
+                settings_font_size: 'Размер шрифта',
+                settings_system: 'Система',
+                settings_data_export: 'Экспорт всех данных',
+                settings_import: 'Импорт данных',
+                settings_clear_data: 'Удалить все данные',
+                settings_version: 'Версия',
+                auth_login_title: 'Вход',
+                auth_login_sub: 'Войдите в свой аккаунт',
+                auth_register_title: 'Регистрация',
+                auth_register_sub: 'Создайте новый аккаунт',
+                auth_email: 'Email',
+                auth_password: 'Пароль',
+                auth_login_btn: 'Войти',
+                auth_register_btn: 'Зарегистрироваться',
+                auth_no_account: 'Нет аккаунта?',
+                auth_have_account: 'Есть аккаунт?',
+                auth_register_link: 'Зарегистрироваться',
+                auth_login_link: 'Войти',
+            },
+            en: {
+                nav_dashboard: 'Dashboard',
+                nav_analytics: 'Analytics',
+                nav_students: 'Students',
+                nav_reports: 'Reports',
+                nav_settings: 'Settings',
+                nav_login: 'Login',
+                stat_students: 'Students',
+                stat_accuracy: 'Accuracy',
+                stat_courses: 'Courses',
+                features_title: 'Core Features',
+                card1_title: 'AI Performance Analyzer',
+                card1_desc: 'Analyzes test results, identifies weak topics, and recommends next week\'s study plan.',
+                card2_title: 'Smart Learning Dashboard',
+                card2_desc: 'Daily, weekly, monthly progress graphs with study hours and assignments.',
+                card3_title: 'AI Personal Study Coach',
+                card3_desc: 'Custom plans based on habits, exam countdown, and motivational reminders.',
+                card4_title: 'Exam Success Predictor',
+                card4_desc: 'Predicts final results, identifies at-risk students, and shows focus areas.',
+                card5_title: 'Learning Habit Tracker',
+                card5_desc: 'Tracks daily study hours, streaks, and goal completion percentages.',
+                card6_title: 'AI Homework Analyzer',
+                card6_desc: 'Analyzes homework errors, detects patterns, and suggests extra practice.',
+                chart_title: 'Weekly Performance',
+                chart_week: 'Week',
+                chart_month: 'Month',
+                chart_year: 'Year',
+                chart_performance: 'Performance (%)',
+                chart_peak: 'Peak Performance',
+                chat_title: 'AI Assistant',
+                chat_sub: 'Ask about your performance',
+                chat_placeholder: 'E.g., Why did my math score drop?',
+                chat_send: 'Send',
+                chat_default: 'Hello! I can help with your learning journey. Ask me anything.',
+                language: 'Language',
+                theme_toggle: 'Theme',
+                analytics_title: 'Analytics',
+                analytics_dashboard: 'Dashboard',
+                analytics_desc: 'Deep insights into student performance, trends, and predictive analytics.',
+                analytics_trends: 'Performance Trends',
+                analytics_trends_desc: 'Overall class average increased by 12% this semester.',
+                analytics_risk: 'At-Risk Students',
+                analytics_risk_desc: '8 students show declining performance. Early intervention recommended.',
+                analytics_time: 'Study Time Analysis',
+                analytics_time_desc: 'Average study time: 4.2 hours/day. Most productive hours: 9-11 AM.',
+                analytics_top: 'Top Performers',
+                analytics_top_desc: '12 students with 90%+ average. Best improvement: +28% this month.',
+                analytics_monthly: 'Monthly Progress Trend',
+                table_subject: 'Subject',
+                table_avg: 'Average Score',
+                table_pass: 'Pass Rate',
+                table_trend: 'Trend',
+                subject_math: 'Mathematics',
+                subject_physics: 'Physics',
+                subject_english: 'English',
+                subject_chemistry: 'Chemistry',
+                subject_history: 'History',
+                students_title: 'Students',
+                students_overview: 'Overview',
+                students_desc: 'Complete list of all students with their performance metrics and status.',
+                students_total: 'Total Students',
+                students_active: 'Active: 1,201 · Inactive: 83',
+                students_distribution: 'Class Distribution',
+                table_name: 'Student Name',
+                table_class: 'Class',
+                table_attendance: 'Attendance',
+                table_status: 'Status',
+                status_excellent: 'Excellent',
+                status_good: 'Good',
+                status_risk: 'At Risk',
+                status_support: 'Needs Support',
+                status_outstanding: 'Outstanding',
+                reports_title: 'Reports',
+                reports_analytics: '& Analytics',
+                reports_desc: 'Generate and export detailed reports on student performance, attendance, and more.',
+                reports_performance: 'Performance Report',
+                reports_performance_desc: 'Comprehensive PDF report with all student metrics, trends, and predictions.',
+                reports_export: 'Export',
+                reports_attendance: 'Attendance Report',
+                reports_attendance_desc: 'Excel export with detailed attendance records and correlation analysis.',
+                reports_summary: 'Class Summary',
+                reports_summary_desc: 'Printable summary for each class with average scores and top performers.',
+                reports_print: 'Print',
+                reports_predictive: 'Predictive Analytics',
+                reports_predictive_desc: 'AI-generated predictions for final exam results and intervention recommendations.',
+                reports_status: 'Report Generation Status',
+                reports_generated_2min: 'Generated: 2 min ago',
+                reports_generated_15min: 'Generated: 15 min ago',
+                reports_generated_1hour: 'Generated: 1 hour ago',
+                reports_processing: 'Processing...',
+                video_caption: 'AI Academic Analytics Platform - Overview (20 sec)',
+                footer_desc: 'Smart academic analytics platform powered by AI.',
+                footer_platform: 'Platform',
+                footer_resources: 'Resources',
+                footer_docs: 'Documentation',
+                footer_api: 'API',
+                footer_support: 'Support',
+                footer_blog: 'Blog',
+                footer_contact: 'Contact',
+                footer_rights: 'All rights reserved.',
+                settings_title: 'Settings',
+                settings_desc: 'Manage your profile, notifications, and application preferences.',
+                settings_profile: 'Profile Settings',
+                settings_name: 'Full Name',
+                settings_email: 'Email',
+                settings_password: 'Change Password',
+                settings_notifications: 'Notification Settings',
+                settings_grade_alerts: 'Grade Alerts',
+                settings_exam_reminders: 'Exam Reminders',
+                settings_report_alerts: 'Report Alerts',
+                settings_attendance_alerts: 'Attendance Alerts',
+                settings_appearance: 'Appearance',
+                settings_dark_mode: 'Dark Mode',
+                settings_language: 'Language',
+                settings_font_size: 'Font Size',
+                settings_system: 'System',
+                settings_data_export: 'Export All Data',
+                settings_import: 'Import Data',
+                settings_clear_data: 'Clear All Data',
+                settings_version: 'Version',
+                auth_login_title: 'Login',
+                auth_login_sub: 'Sign in to your account',
+                auth_register_title: 'Register',
+                auth_register_sub: 'Create a new account',
+                auth_email: 'Email',
+                auth_password: 'Password',
+                auth_login_btn: 'Login',
+                auth_register_btn: 'Register',
+                auth_no_account: 'Don\'t have an account?',
+                auth_have_account: 'Have an account?',
+                auth_register_link: 'Register',
+                auth_login_link: 'Login',
+            },
+            tr: {
+                nav_dashboard: 'Panel',
+                nav_analytics: 'Analitik',
+                nav_students: 'Öğrenciler',
+                nav_reports: 'Raporlar',
+                nav_settings: 'Ayarlar',
+                nav_login: 'Giriş',
+                stat_students: 'Öğrenciler',
+                stat_accuracy: 'Doğruluk',
+                stat_courses: 'Kurslar',
+                features_title: 'Temel Özellikler',
+                card1_title: 'AI Performans Analizörü',
+                card1_desc: 'Test sonuçlarını analiz eder, zayıf konuları belirler ve haftalık çalışma planı önerir.',
+                card2_title: 'Akıllı Öğrenme Paneli',
+                card2_desc: 'Günlük, haftalık ve aylık ilerleme grafikleri, çalışma saatleri ve ödevler.',
+                card3_title: 'AI Kişisel Çalışma Koçu',
+                card3_desc: 'Alışkanlıklara göre özel plan, sınav geri sayımı ve motivasyon hatırlatıcıları.',
+                card4_title: 'Sınav Başarı Tahmincisi',
+                card4_desc: 'Nihai sonuçları tahmin eder, risk altındaki öğrencileri belirler.',
+                card5_title: 'Öğrenme Alışkanlığı Takibi',
+                card5_desc: 'Günlük çalışma saatleri, seriler ve hedef tamamlama yüzdeleri.',
+                card6_title: 'AI Ödev Analizörü',
+                card6_desc: 'Ödev hatalarını analiz eder, kalıpları tespit eder ve ekstra alıştırma önerir.',
+                chart_title: 'Haftalık Performans',
+                chart_week: 'Hafta',
+                chart_month: 'Ay',
+                chart_year: 'Yıl',
+                chart_performance: 'Performans (%)',
+                chart_peak: 'En Yüksek Performans',
+                chat_title: 'AI Asistan',
+                chat_sub: 'Performansınız hakkında sorun',
+                chat_placeholder: 'Örneğin: Matematik notum neden düştü?',
+                chat_send: 'Gönder',
+                chat_default: 'Merhaba! Öğrenme yolculuğunuzda yardımcı olabilirim. Sorunuzu yazın.',
+                language: 'Dil',
+                theme_toggle: 'Tema',
+                analytics_title: 'Analitik',
+                analytics_dashboard: 'Panel',
+                analytics_desc: 'Öğrenci performansı, eğilimler ve tahmine dayalı analizler hakkında derin içgörüler.',
+                analytics_trends: 'Performans Eğilimleri',
+                analytics_trends_desc: 'Bu dönemde sınıf ortalaması %12 arttı.',
+                analytics_risk: 'Risk Altındaki Öğrenciler',
+                analytics_risk_desc: '8 öğrenci düşen performans gösteriyor. Erken müdahale önerilir.',
+                analytics_time: 'Çalışma Süresi Analizi',
+                analytics_time_desc: 'Ortalama çalışma süresi: günde 4.2 saat. En verimli saatler: 9-11 AM.',
+                analytics_top: 'En İyi Performans Gösterenler',
+                analytics_top_desc: 'Ortalaması %90+ olan 12 öğrenci. En iyi iyileşme: bu ay +%28.',
+                analytics_monthly: 'Aylık İlerleme Eğilimi',
+                table_subject: 'Ders',
+                table_avg: 'Ortalama Puan',
+                table_pass: 'Başarı Oranı',
+                table_trend: 'Eğilim',
+                subject_math: 'Matematik',
+                subject_physics: 'Fizik',
+                subject_english: 'İngilizce',
+                subject_chemistry: 'Kimya',
+                subject_history: 'Tarih',
+                students_title: 'Öğrenciler',
+                students_overview: 'Genel Bakış',
+                students_desc: 'Tüm öğrencilerin performans metrikleri ve durumları ile birlikte tam listesi.',
+                students_total: 'Toplam Öğrenci',
+                students_active: 'Aktif: 1,201 · Aktif değil: 83',
+                students_distribution: 'Sınıf Dağılımı',
+                table_name: 'Öğrenci Adı',
+                table_class: 'Sınıf',
+                table_attendance: 'Devam',
+                table_status: 'Durum',
+                status_excellent: 'Mükemmel',
+                status_good: 'İyi',
+                status_risk: 'Risk Altında',
+                status_support: 'Destek Gerekiyor',
+                status_outstanding: 'Olağanüstü',
+                reports_title: 'Raporlar',
+                reports_analytics: '& Analitik',
+                reports_desc: 'Öğrenci performansı, devam ve daha fazlası hakkında ayrıntılı raporlar oluşturun ve dışa aktarın.',
+                reports_performance: 'Performans Raporu',
+                reports_performance_desc: 'Tüm öğrenci metrikleri, eğilimler ve tahminler içeren kapsamlı PDF raporu.',
+                reports_export: 'Dışa Aktar',
+                reports_attendance: 'Devam Raporu',
+                reports_attendance_desc: 'Ayrıntılı devam kayıtları ve korelasyon analizi ile Excel dışa aktarımı.',
+                reports_summary: 'Sınıf Özeti',
+                reports_summary_desc: 'Her sınıf için ortalama puanlar ve en iyi performans gösterenler ile yazdırılabilir özet.',
+                reports_print: 'Yazdır',
+                reports_predictive: 'Tahmine Dayalı Analitik',
+                reports_predictive_desc: 'Final sınav sonuçları ve müdahale önerileri için AI tarafından oluşturulan tahminler.',
+                reports_status: 'Rapor Oluşturma Durumu',
+                reports_generated_2min: 'Oluşturuldu: 2 dakika önce',
+                reports_generated_15min: 'Oluşturuldu: 15 dakika önce',
+                reports_generated_1hour: 'Oluşturuldu: 1 saat önce',
+                reports_processing: 'İşleniyor...',
+                video_caption: 'AI Academic Analytics Platform - Genel Bakış (20 sn)',
+                footer_desc: 'AI destekli akıllı akademik analitik platformu.',
+                footer_platform: 'Platform',
+                footer_resources: 'Kaynaklar',
+                footer_docs: 'Dokümantasyon',
+                footer_api: 'API',
+                footer_support: 'Destek',
+                footer_blog: 'Blog',
+                footer_contact: 'İletişim',
+                footer_rights: 'Tüm hakları saklıdır.',
+                settings_title: 'Ayarlar',
+                settings_desc: 'Profilinizi, bildirimlerinizi ve uygulama tercihlerinizi yönetin.',
+                settings_profile: 'Profil Ayarları',
+                settings_name: 'Tam Ad',
+                settings_email: 'Email',
+                settings_password: 'Şifre Değiştir',
+                settings_notifications: 'Bildirim Ayarları',
+                settings_grade_alerts: 'Not Uyarıları',
+                settings_exam_reminders: 'Sınav Hatırlatıcıları',
+                settings_report_alerts: 'Rapor Uyarıları',
+                settings_attendance_alerts: 'Devam Uyarıları',
+                settings_appearance: 'Görünüm',
+                settings_dark_mode: 'Karanlık Mod',
+                settings_language: 'Dil',
+                settings_font_size: 'Yazı Boyutu',
+                settings_system: 'Sistem',
+                settings_data_export: 'Tüm Verileri Dışa Aktar',
+                settings_import: 'Veri İçe Aktar',
+                settings_clear_data: 'Tüm Verileri Temizle',
+                settings_version: 'Sürüm',
+                auth_login_title: 'Giriş',
+                auth_login_sub: 'Hesabınıza giriş yapın',
+                auth_register_title: 'Kayıt Ol',
+                auth_register_sub: 'Yeni hesap oluşturun',
+                auth_email: 'Email',
+                auth_password: 'Şifre',
+                auth_login_btn: 'Giriş Yap',
+                auth_register_btn: 'Kayıt Ol',
+                auth_no_account: 'Hesabınız yok mu?',
+                auth_have_account: 'Hesabınız var mı?',
+                auth_register_link: 'Kayıt Ol',
+                auth_login_link: 'Giriş Yap',
+            }
+        };
+
+        function applyLanguage(lang) {
+            const t = translations[lang] || translations.uz;
+            document.querySelectorAll('[data-lang-key]').forEach(el => {
+                const key = el.getAttribute('data-lang-key');
+                if (t[key] !== undefined) {
+                    if (el.tagName === 'INPUT' && el.hasAttribute('placeholder')) {
+                        el.placeholder = t[key];
+                    } else {
+                        el.textContent = t[key];
+                    }
+                }
+            });
+            const chatInput = document.getElementById('chatInput');
+            if (chatInput) chatInput.placeholder = t.chat_placeholder || '...';
+            const chatDefault = document.querySelector('#chatResponse span');
+            if (chatDefault && document.querySelector('#chatResponse .fa-robot')) {
+                chatDefault.textContent = t.chat_default || '';
+            }
+            document.querySelectorAll('.mobile-lang button, #langDropdown button').forEach(btn => {
+                btn.classList.toggle('active-lang', btn.getAttribute('data-lang') === lang);
+            });
+            localStorage.setItem('lang', lang);
+            document.getElementById('langDropdown').classList.remove('show');
+        }
+
+        const savedLang = localStorage.getItem('lang') || 'uz';
+        let currentLang = savedLang;
+        applyLanguage(savedLang);
+
+        document.getElementById('langToggle').addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.getElementById('langDropdown').classList.toggle('show');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.lang-dropdown')) {
+                document.getElementById('langDropdown').classList.remove('show');
+            }
+        });
+
+        document.querySelectorAll('#langDropdown button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentLang = btn.getAttribute('data-lang');
+                applyLanguage(currentLang);
+            });
+        });
+
+        document.querySelectorAll('.mobile-lang button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentLang = btn.getAttribute('data-lang');
+                applyLanguage(currentLang);
+                closeMobile();
+            });
+        });
+
+        // ============================================================
+        // ===== CHARTS =====
+        // ============================================================
+        const weeklyData = {
+            week: { labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], values: [65, 78, 82, 91, 73, 88, 95] },
+            month: { labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6', 'Week 7'], values: [55, 62, 70,
+                    78, 85, 91, 94
+                ] },
+            year: { labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'], values: [45, 52, 58, 63, 70, 78, 85] }
+        };
+
+        let currentPeriod = 'week';
+
+        function renderWeeklyChart(period) {
+            currentPeriod = period;
+            const data = weeklyData[period];
+            const container = document.getElementById('chartBars');
+            const maxVal = Math.max(...data.values);
+
+            let html = '';
+            data.values.forEach((val, index) => {
+                const percentage = Math.round((val / maxVal) * 100);
+                html += `
+                    <div class="chart-bar">
+                        <div class="bar-wrapper">
+                            <div class="bar" style="height:0%;" data-target="${percentage}%">
+                                <div class="bar-tooltip">${val}%</div>
+                            </div>
+                        </div>
+                        <div class="bar-value">0%</div>
+                        <div class="bar-label">${data.labels[index]}</div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+
+            setTimeout(() => {
+                const bars = container.querySelectorAll('.bar');
+                const values = container.querySelectorAll('.bar-value');
+                bars.forEach((bar, index) => {
+                    const target = bar.getAttribute('data-target');
+                    setTimeout(() => {
+                        bar.style.height = target;
+                        const targetVal = data.values[index];
+                        let currentVal = 0;
+                        const step = Math.max(1, Math.floor(targetVal / 25));
+                        const interval = setInterval(() => {
+                            currentVal += step;
+                            if (currentVal >= targetVal) {
+                                currentVal = targetVal;
+                                clearInterval(interval);
+                            }
+                            values[index].textContent = Math.round(currentVal) + '%';
+                        }, 20);
+                    }, 150 + index * 80);
+                });
+            }, 100);
+        }
+
+        document.querySelectorAll('#page-dashboard .chart-controls button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('#page-dashboard .chart-controls button').forEach(b => b.classList.remove(
+                    'active'));
+                this.classList.add('active');
+                renderWeeklyChart(this.getAttribute('data-period'));
+            });
+        });
+
+        // ===== TREND CHART =====
+        const trendData = {
+            '6month': { labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'], values: [55, 62, 70, 78, 85, 91] },
+            '12month': { labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                values: [45, 48, 52, 58, 62, 70, 75, 78, 82, 85, 88, 91] },
+            'all': { labels: ['2020', '2021', '2022', '2023', '2024', '2025', '2026'], values: [48, 52, 58, 65, 72, 80,
+                    91] }
+        };
+
+        let currentTrend = '6month';
+
+        function renderTrendChart(period) {
+            currentTrend = period;
+            const data = trendData[period];
+            const container = document.getElementById('trendBars');
+            const maxVal = Math.max(...data.values);
+
+            let html = '';
+            data.values.forEach((val, index) => {
+                const percentage = Math.round((val / maxVal) * 100);
+                const isPeak = val === maxVal;
+                html += `
+                    <div class="chart-bar">
+                        <div class="bar-wrapper">
+                            <div class="bar" style="height:0%; background: ${isPeak ? 'linear-gradient(135deg, #f093fb, #f5576c)' : 'var(--gradient-main)'};" data-target="${percentage}%">
+                                <div class="bar-tooltip">${val}%</div>
+                            </div>
+                        </div>
+                        <div class="bar-value">0%</div>
+                        <div class="bar-label">${data.labels[index]}</div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+
+            setTimeout(() => {
+                const bars = container.querySelectorAll('.bar');
+                const values = container.querySelectorAll('.bar-value');
+                bars.forEach((bar, index) => {
+                    const target = bar.getAttribute('data-target');
+                    setTimeout(() => {
+                        bar.style.height = target;
+                        const targetVal = data.values[index];
+                        let currentVal = 0;
+                        const step = Math.max(1, Math.floor(targetVal / 25));
+                        const interval = setInterval(() => {
+                            currentVal += step;
+                            if (currentVal >= targetVal) {
+                                currentVal = targetVal;
+                                clearInterval(interval);
+                            }
+                            values[index].textContent = Math.round(currentVal) + '%';
+                        }, 20);
+                    }, 150 + index * 80);
+                });
+            }, 100);
+        }
+
+        document.querySelectorAll('#page-analytics .chart-controls button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('#page-analytics .chart-controls button').forEach(b => b.classList.remove(
+                    'active'));
+                this.classList.add('active');
+                renderTrendChart(this.getAttribute('data-trend'));
+            });
+        });
+
+        // ============================================================
+        // ===== PAGE NAVIGATION =====
+        // ============================================================
+        let isAuthMode = 'login';
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById('page-' + pageId);
+            if (target) {
+                target.classList.add('active');
+
+                if (pageId === 'dashboard') {
+                    setTimeout(() => renderWeeklyChart(currentPeriod), 400);
+                }
+                if (pageId === 'analytics') {
+                    setTimeout(() => renderTrendChart(currentTrend), 400);
+                }
+            }
+
+            document.querySelectorAll('.nav-links a, .mobile-nav a[data-page]').forEach(link => {
+                link.classList.toggle('active', link.getAttribute('data-page') === pageId);
+            });
+            closeMobile();
+        }
+
+        document.querySelectorAll('.nav-links a[data-page], .mobile-nav a[data-page]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const page = link.getAttribute('data-page');
+                const loader = document.getElementById('loader');
+                loader.classList.remove('hide');
+                setTimeout(() => {
+                    showPage(page);
+                    loader.classList.add('hide');
+                }, 1000);
+            });
+        });
+
+        document.getElementById('brandLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            const loader = document.getElementById('loader');
+            loader.classList.remove('hide');
+            setTimeout(() => {
+                showPage('dashboard');
+                loader.classList.add('hide');
+            }, 1000);
+        });
+
+        // ============================================================
+        // ===== AUTH =====
+        // ============================================================
+        function selectRole(role) {
+            document.querySelectorAll('.role-selector button').forEach(b => b.classList.remove('active'));
+            document.querySelector(`.role-selector button[data-role="${role}"]`).classList.add('active');
+            // Show confetti on role selection
+            fireConfetti();
+        }
+
+        function toggleAuthMode() {
+            const isLogin = isAuthMode === 'login';
+            isAuthMode = isLogin ? 'register' : 'login';
+            const title = document.getElementById('authTitle');
+            const subtitle = document.getElementById('authSubtitle');
+            const btn = document.querySelector('#authForm .btn-primary span');
+            const link = document.getElementById('authToggleLink');
+
+            if (isAuthMode === 'login') {
+                title.innerHTML = '🔐 <span data-lang-key="auth_login_title">Kirish</span>';
+                subtitle.textContent = translations[currentLang]?.auth_login_sub || 'Hisobingizga kiring';
+                btn.textContent = translations[currentLang]?.auth_login_btn || 'Kirish';
+                link.textContent = translations[currentLang]?.auth_register_link || 'Ro\'yxatdan o\'tish';
+                document.querySelector('.auth-link span').textContent = translations[currentLang]?.auth_no_account ||
+                    'Hisobingiz yo\'qmi?';
+            } else {
+                title.innerHTML = '📝 <span data-lang-key="auth_register_title">Ro\'yxatdan o\'tish</span>';
+                subtitle.textContent = translations[currentLang]?.auth_register_sub || 'Yangi hisob yarating';
+                btn.textContent = translations[currentLang]?.auth_register_btn || 'Ro\'yxatdan o\'tish';
+                link.textContent = translations[currentLang]?.auth_login_link || 'Kirish';
+                document.querySelector('.auth-link span').textContent = translations[currentLang]?.auth_have_account ||
+                    'Hisobingiz bormi?';
+            }
+            applyLanguage(currentLang);
+        }
+
+        function handleAuth() {
+            const email = document.getElementById('authEmail').value;
+            const password = document.getElementById('authPassword').value;
+            if (!email || !password) {
+                alert('Iltimos, barcha maydonlarni to\'ldiring!');
+                return;
+            }
+            // Show success
+            fireConfetti();
+            alert(isAuthMode === 'login' ? '✅ Muvaffaqiyatli kirdingiz!' : '✅ Muvaffaqiyatli ro\'yxatdan o\'tdingiz!');
+            // Close auth and go to dashboard
+            showPage('dashboard');
+        }
+
+        // ============================================================
+        // ===== EXPORT FUNCTIONS =====
+        // ============================================================
+        function exportPDF() {
+            const element = document.querySelector('.table-wrap') || document.querySelector('.chart-area');
+            if (!element) return;
+            const opt = {
+                margin: 1,
+                filename: 'academic_report.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+            html2pdf().set(opt).from(element).save().then(() => {
+                fireConfetti();
+                alert('📄 PDF hisobot muvaffaqiyatli yuklab olindi!');
+            });
+        }
+
+        function exportExcel() {
+            const data = [
+                ['#', 'Student Name', 'Class', 'Average', 'Attendance', 'Status'],
+                ['1', 'Ali Karimov', '10-A', '92%', '98%', 'Excellent'],
+                ['2', 'Zarina Ismailova', '11-B', '87%', '95%', 'Good'],
+                ['3', 'Jahongir Rahimov', '12-A', '64%', '72%', 'At Risk'],
+                ['4', 'Dilnoza Akhmedova', '10-B', '79%', '88%', 'Needs Support'],
+                ['5', 'Shohruh Yakubov', '11-A', '95%', '100%', 'Outstanding'],
+                ['6', 'Madina Tursunova', '12-B', '71%', '80%', 'Needs Support'],
+                ['7', 'Bekzod Yuldashev', '10-A', '83%', '92%', 'Good'],
+                ['8', 'Nigora Saidova', '11-B', '58%', '65%', 'At Risk']
+            ];
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet(data);
+            XLSX.utils.book_append_sheet(wb, ws, 'Students');
+            XLSX.writeFile(wb, 'students_report.xlsx');
+            fireConfetti();
+            alert('📊 Excel hisobot muvaffaqiyatli yuklab olindi!');
+        }
+
+        // ============================================================
+        // ===== HAMBURGER =====
+        // ============================================================
+        function toggleMobile() {
+            const isOpen = document.getElementById('mobileNav').classList.toggle('open');
+            document.getElementById('mobileOverlay').classList.toggle('show', isOpen);
+            document.getElementById('hamburger').classList.toggle('active', isOpen);
+            document.body.style.overflow = isOpen ? 'hidden' : '';
+        }
+
+        function closeMobile() {
+            document.getElementById('mobileNav').classList.remove('open');
+            document.getElementById('mobileOverlay').classList.remove('show');
+            document.getElementById('hamburger').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        document.getElementById('hamburger').addEventListener('click', toggleMobile);
+        document.getElementById('mobileOverlay').addEventListener('click', closeMobile);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeMobile();
+        });
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768 && document.getElementById('mobileNav').classList.contains('open')) {
+                closeMobile();
+            }
+        });
+
+        // ============================================================
+        // ===== HERO SLIDESHOW =====
+        // ============================================================
+        let slideIndex = 0;
+        const slides = document.querySelectorAll('#slideshow .slide');
+
+        function nextSlide() {
+            slides.forEach(s => s.classList.remove('active'));
+            slideIndex = (slideIndex + 1) % slides.length;
+            slides[slideIndex].classList.add('active');
+        }
+
+        if (slides.length > 0) {
+            setInterval(nextSlide, 4000);
+        }
+
+        // ============================================================
+        // ===== AI CHAT =====
+        // ============================================================
+        const chatResponses = {
+            uz: [
+                'Matematikadagi natijangiz pasaygan bo\'lsa, ehtimol asosiy mavzularni yetarlicha takrorlamagansiz. Biz sizga "Algebra va funksiyalar" bo\'limini qayta ko\'rib chiqishni tavsiya qilamiz.',
+                'Sizning progress grafigingiz so\'nggi haftada biroz pasaygan. Kuniga 30 daqiqa ko\'proq vaqt ajratish natijangizni yaxshilashi mumkin.',
+                'Ajoyib! Sizning o\'qish ketma-ketligingiz 7 kun. Bu a\'lo natija, shunday davom eting!',
+                'Test natijalariga ko\'ra, sizning eng kuchli faningiz - Ingliz tili (89%), eng zaif faningiz - Fizika (61%). Fizikaga ko\'proq e\'tibor qaratish tavsiya etiladi.',
+                'Imtihongacha 45 kun qoldi. Har kuni 2 soatdan o\'qish bilan barcha mavzularni qamrab olishingiz mumkin.',
+            ],
+            ru: [
+                'Если ваша успеваемость по математике снизилась, возможно, вы недостаточно повторяли основные темы. Рекомендуем пересмотреть раздел "Алгебра и функции".',
+                'Ваш график прогресса немного снизился за последнюю неделю. Добавление 30 минут в день может улучшить результат.',
+                'Отлично! Ваша учебная серия составляет 7 дней. Продолжайте в том же духе!',
+                'Согласно результатам тестов, ваш самый сильный предмет - Английский язык (89%), самый слабый - Физика (61%). Рекомендуется уделять больше внимания физике.',
+                'До экзамена осталось 45 дней. Занимаясь по 2 часа в день, вы сможете охватить все темы.',
+            ],
+            en: [
+                'If your math score dropped, you may need to review core topics like "Algebra and Functions". We recommend extra practice.',
+                'Your progress chart shows a slight dip this week. Adding 30 minutes of daily study could help.',
+                'Great! Your study streak is 7 days. Keep it up!',
+                'Based on test results, your strongest subject is English (89%), weakest is Physics (61%). Focus more on Physics.',
+                '45 days left until the exam. With 2 hours of daily study, you can cover all topics.',
+            ],
+            tr: [
+                'Matematik notunuz düştüyse, "Cebir ve Fonksiyonlar" gibi temel konuları tekrar etmeniz gerekebilir. Ekstra pratik öneririz.',
+                'İlerleme grafiğiniz bu hafta hafif bir düşüş gösteriyor. Günde 30 dakika ek çalışma yardımcı olabilir.',
+                'Harika! Çalışma seriniz 7 gün. Devam edin!',
+                'Test sonuçlarına göre en güçlü dersiniz İngilizce (%89), en zayıf dersiniz Fizik (%61). Fiziğe daha fazla odaklanın.',
+                'Sınava 45 gün kaldı. Günde 2 saat çalışarak tüm konuları kapsayabilirsiniz.',
+            ]
+        };
+
+        function getChatResponse(lang) {
+            const list = chatResponses[lang] || chatResponses.uz;
+            return list[Math.floor(Math.random() * list.length)];
+        }
+
+        document.getElementById('chatSend').addEventListener('click', () => {
+            const input = document.getElementById('chatInput');
+            const query = input.value.trim();
+            const responseEl = document.getElementById('chatResponse');
+            if (!query) {
+                const t = translations[currentLang] || translations.uz;
+                responseEl.innerHTML =
+                    `<i class="fas fa-robot" style="margin-right:12px; opacity:0.5;"></i><span>${t.chat_default || 'Iltimos, savol yozing.'}</span>`;
+                return;
+            }
+            const response = getChatResponse(currentLang);
+            responseEl.innerHTML =
+                `<i class="fas fa-robot" style="margin-right:12px; opacity:0.5;"></i><span>${response}</span>`;
+            input.value = '';
+            fireConfetti();
+        });
+
+        document.getElementById('chatInput').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') document.getElementById('chatSend').click();
+        });
+
+        // ============================================================
+        // ===== INIT =====
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                renderWeeklyChart('week');
+                renderTrendChart('6month');
+            }, 500);
+
+            // Auto-show auth page if not logged in
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            if (!isLoggedIn) {
+                setTimeout(() => {
+                    showPage('auth');
+                }, 1500);
+            }
+        });
+
+        // ============================================================
+        // ===== VIDEO AUTO-PLAY =====
+        // ============================================================
+        const video = document.querySelector('video');
+        if (video) {
+            video.addEventListener('loadedmetadata', () => {
+                video.play().catch(() => {});
+            });
+        }
+
+        // ============================================================
+        // ===== DYNAMIC STATS COUNTER =====
+        // ============================================================
+        function animateCounter(el, target, suffix = '') {
+            let current = 0;
+            const step = Math.max(1, Math.floor(target / 40));
+            const interval = setInterval(() => {
+                current += step;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(interval);
+                }
+                el.textContent = current + suffix;
+            }, 25);
+        }
+
+        setTimeout(() => {
+            const statStudents = document.getElementById('statStudents');
+            const statAccuracy = document.getElementById('statAccuracy');
+            const statCourses = document.getElementById('statCourses');
+            if (statStudents) animateCounter(statStudents, 1284);
+            if (statAccuracy) animateCounter(statAccuracy, 94, '%');
+            if (statCourses) animateCounter(statCourses, 24);
+        }, 800);
+
+        // ============================================================
+        // ===== SERVICE WORKER (PWA) =====
+        // ============================================================
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').then(() => {
+                console.log('Service Worker registered');
+            }).catch(() => {
+                console.log('Service Worker registration failed');
+            });
+        }
+
+        // ============================================================
+        // ===== WEBSOCKET (Real-time) SIMULATION =====
+        // ============================================================
+        function simulateRealtimeUpdate() {
+            // Simulate new student or grade update
+            const notifList = document.getElementById('notifList');
+            if (notifList) {
+                const updates = [
+                    { icon: 'success', iconClass: 'fa-user-plus', title: 'Yangi talaba qo\'shildi',
+                    desc: 'Sardor Rahimov 10-A sinfiga qo\'shildi' },
+                    { icon: 'warning', iconClass: 'fa-chart-down', title: 'Baholar yangilandi',
+                    desc: 'Matematika fanidan 3 talaba bahosi o\'zgartirildi' },
+                    { icon: 'info', iconClass: 'fa-calendar-plus', title: 'Yangi dars jadvali',
+                    desc: 'Haftalik dars jadvali yangilandi' },
+                ];
+                const update = updates[Math.floor(Math.random() * updates.length)];
+                const item = document.createElement('div');
+                item.className = 'notif-item';
+                item.innerHTML = `
+                    <div class="notif-icon ${update.icon}"><i class="fas ${update.iconClass}"></i></div>
+                    <div class="notif-content">
+                        <h4>${update.title}</h4>
+                        <p>${update.desc}</p>
+                    </div>
+                    <span class="notif-time">Hozir</span>
+                `;
+                notifList.prepend(item);
+                document.querySelector('.notif-dot').style.display = 'block';
+                fireConfetti();
+            }
+        }
+
+        // Simulate real-time update every 30 seconds
+        setInterval(simulateRealtimeUpdate, 30000);
+    </script>
+</body>
+</html>
